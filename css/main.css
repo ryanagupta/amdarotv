@@ -333,7 +333,7 @@ body.mode-pointer .focusable:hover {
   display: inline-flex;
   -webkit-align-items: center;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   background: transparent;
   border: none;
   padding: 0;
@@ -343,8 +343,8 @@ body.mode-pointer .focusable:hover {
 }
 
 .top-nav-chevron {
-  width: 13px;
-  height: 24px;
+  width: 15px;
+  height: 28px;
   color: #E5E5EA;
   flex-shrink: 0;
   display: block;
@@ -355,19 +355,19 @@ body.mode-pointer .focusable:hover {
   display: inline-flex;
   -webkit-align-items: center;
   align-items: center;
-  height: 48px;
-  padding: 5px 22px 5px 5px;
+  height: 56px;
+  padding: 6px 26px 6px 6px;
   border-radius: 9999px;
   background: #232225;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.30);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
 }
 
 .top-nav-icon-circle {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: #515154;
   display: -webkit-flex;
@@ -381,19 +381,19 @@ body.mode-pointer .focusable:hover {
 }
 
 .top-nav-search-icon {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   stroke: #FFFFFF;
   flex-shrink: 0;
 }
 
 .top-nav-label {
   font-family: 'San Francisco Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 700;
   color: #FFFFFF;
-  letter-spacing: -0.2px;
-  margin-left: 10px;
+  letter-spacing: -0.3px;
+  margin-left: 12px;
   line-height: 1;
   white-space: nowrap;
 }
