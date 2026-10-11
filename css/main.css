@@ -417,8 +417,8 @@ body.mode-pointer .focusable:hover {
 }
 
 .search-prompt-icon {
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   color: #6B6B6C;
   flex-shrink: 0;
   display: block;
