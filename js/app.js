@@ -16,6 +16,11 @@ window.addEventListener('load', function () {
   // Initialize collapsible on-screen keyboard
   OnScreenKeyboard.init();
 
+  // Initialize 1:1 Apple TV+ detailed view modal
+  if (window.DetailView) {
+    DetailView.init();
+  }
+
   // Initialize TMDB & TVDB search engine & results
   MediaSearch.init();
 

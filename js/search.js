@@ -170,21 +170,24 @@ var MediaSearch = (function () {
     return out;
   }
 
+  var currentItemsList = [];
+
   /**
    * Render tiles into results grid
    */
   function renderResults(items) {
     if (!resultsContainer) return;
     resultsContainer.innerHTML = '';
+    currentItemsList = items || [];
 
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      var card = createCardElement(item);
+    for (var i = 0; i < currentItemsList.length; i++) {
+      var item = currentItemsList[i];
+      var card = createCardElement(item, i);
       resultsContainer.appendChild(card);
     }
   }
 
-  function createCardElement(item) {
+  function createCardElement(item, index) {
     var card = document.createElement('div');
     card.className = 'media-tile focusable';
     card.tabIndex = 0;
@@ -200,7 +203,11 @@ var MediaSearch = (function () {
 
     card.addEventListener('click', function () {
       lastSelectedTile = card;
-      openDetails(item);
+      if (window.DetailView) {
+        DetailView.open(item, currentItemsList, index);
+      } else {
+        openDetails(item);
+      }
     });
 
     return card;
@@ -247,6 +254,11 @@ var MediaSearch = (function () {
    * Fetch and display detailed metadata & actor cast
    */
   function openDetails(item) {
+    if (window.DetailView) {
+      var idx = currentItemsList.indexOf(item);
+      DetailView.open(item, currentItemsList, idx >= 0 ? idx : 0);
+      return;
+    }
     if (!detailsModal) return;
     isModalOpen = true;
     detailsModal.setAttribute('aria-hidden', 'false');

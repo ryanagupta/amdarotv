@@ -63,6 +63,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'SF Pro Rounded';
+  src: url('../San-Francisco-Pro-Fonts-master/SF-Pro-Rounded-Heavy.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+}
+
 /* --------------------------------------------------------------------------
    Universal Reset & Deep Dark Grey Base Canvas (#0c0c0e)
    -------------------------------------------------------------------------- */
@@ -660,7 +667,7 @@ body.mode-pointer .media-tile:hover {
 }
 
 /* --------------------------------------------------------------------------
-   Comprehensive Media Details Modal
+   1:1 Apple TV+ Comprehensive Media Details Modal (5-Stage Animation)
    -------------------------------------------------------------------------- */
 
 .media-details-modal {
@@ -673,8 +680,12 @@ body.mode-pointer .media-tile:hover {
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.52s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.52s ease;
+  background: #000000;
+  overflow: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.55s ease;
 }
 
 .media-details-modal.open {
@@ -683,189 +694,1012 @@ body.mode-pointer .media-tile:hover {
   visibility: visible;
 }
 
-.modal-backdrop-blur {
+/* Top Navigation Hint (Stage 3 Full Screen: "∧ Press Up for Playback Controls") */
+.modal-top-hint {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center top;
-  -webkit-filter: blur(24px) brightness(0.28);
-  filter: blur(24px) brightness(0.28);
-  -webkit-transform: scale(1.08);
-  transform: scale(1.08);
-  transition: opacity 0.52s ease;
-}
-
-.modal-scrim {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 60% 40%, rgba(12, 12, 14, 0.4) 0%, rgba(12, 12, 14, 0.92) 100%);
-}
-
-.modal-content {
-  position: absolute;
-  top: 80px;
-  left: 120px;
-  right: 120px;
-  bottom: 80px;
-  padding: 48px;
-  border-radius: 28px;
-  z-index: 10;
-  overflow: hidden;
-  /* Slow, smooth cinema modal glide from middle up */
-  -webkit-transform: translate3d(0, 60px, 0) scale(0.96);
-  transform: translate3d(0, 60px, 0) scale(0.96);
+  top: 30px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: rgba(255, 255, 255, 0.70);
+  z-index: 60;
   opacity: 0;
-  transition: -webkit-transform 0.56s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.56s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  transition: opacity 0.40s ease;
 }
 
-.media-details-modal.open .modal-content {
-  -webkit-transform: translate3d(0, 0, 0) scale(1);
-  transform: translate3d(0, 0, 0) scale(1);
+.modal-top-hint.visible {
   opacity: 1;
+  pointer-events: auto;
 }
 
+.hint-chevron {
+  width: 14px;
+  height: 14px;
+  stroke: rgba(255, 255, 255, 0.85);
+  -webkit-animation: hintBounce 2s infinite ease-in-out;
+  animation: hintBounce 2s infinite ease-in-out;
+}
+
+@-webkit-keyframes hintBounce {
+  0%, 100% { -webkit-transform: translateY(0); transform: translateY(0); }
+  50% { -webkit-transform: translateY(-4px); transform: translateY(-4px); }
+}
+@keyframes hintBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Close Button (Top right, accessible via remote or pointer) */
 .modal-close-btn {
   position: absolute;
-  top: 32px;
-  right: 32px;
+  top: 36px;
+  right: 48px;
   width: 44px;
   height: 44px;
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
   display: -webkit-flex;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 20;
+  z-index: 70;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   transition: -webkit-transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.35s ease;
+              background 0.30s ease,
+              border-color 0.30s ease;
 }
 
-.modal-body-layout {
+body.mode-5way .modal-close-btn.focused,
+body.mode-pointer .modal-close-btn:hover {
+  -webkit-transform: scale(1.12);
+  transform: scale(1.12);
+  background: rgba(255, 255, 255, 0.30);
+  border-color: rgba(255, 255, 255, 0.60);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.40);
+  outline: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   Carousel Stage: Side Peeking Cards & Center Hero Card
+   -------------------------------------------------------------------------- */
+
+.modal-carousel-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
   display: -webkit-flex;
   display: flex;
-  height: 100%;
-  gap: 48px;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: -webkit-transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.modal-poster-wrapper {
-  width: 320px;
-  height: 480px;
-  flex-shrink: 0;
-  border-radius: 24px;
+/* Left & Right Peek Cards (Stage 1 & Stage 2) */
+.modal-peek-card {
+  position: absolute;
+  width: 440px;
+  height: 860px;
+  border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
-  background: #18181e;
+  opacity: 0.32;
+  -webkit-filter: blur(2px) brightness(0.60);
+  filter: blur(2px) brightness(0.60);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 5;
+  transition: opacity 0.55s ease,
+              -webkit-filter 0.55s ease,
+              filter 0.55s ease,
+              -webkit-transform 0.60s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.60s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.modal-poster-img {
+.modal-peek-card.peek-left {
+  left: -290px;
+  -webkit-transform: scale(0.92);
+  transform: scale(0.92);
+}
+
+.modal-peek-card.peek-right {
+  right: -290px;
+  -webkit-transform: scale(0.92);
+  transform: scale(0.92);
+}
+
+.peek-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.modal-details-col {
-  -webkit-flex: 1;
-  flex: 1;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding-right: 16px;
+/* Peek cards fade out completely in Full-Screen Stage 3 */
+.stage-3-fullscreen .modal-peek-card {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  -webkit-transform: scale(0.85);
+  transform: scale(0.85);
 }
 
-.modal-title {
-  font-size: 38px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  color: #ffffff;
+/* Main Hero Card */
+.modal-hero-card {
+  width: 1580px;
+  height: 890px;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 40px 110px rgba(0, 0, 0, 0.92);
+  pointer-events: auto;
+  z-index: 12;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: width 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              -webkit-transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.modal-meta-strip {
-  display: -webkit-flex;
-  display: flex;
-  gap: 12px;
-  margin: 14px 0 20px 0;
+/* Stage 3 (Full-Screen Expansion): Card expands edge-to-edge (1920x1080) */
+.stage-3-fullscreen .modal-hero-card {
+  width: 1920px !important;
+  height: 1080px !important;
+  border-radius: 0px !important;
+  box-shadow: none !important;
 }
 
-.meta-pill {
-  padding: 6px 14px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #e4e4e7;
+/* Hero Background Image & Film Gradient */
+.modal-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
 }
 
-.meta-pill.rating {
-  color: #ffd60a;
+.modal-hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: -webkit-transform 0.80s ease,
+              transform 0.80s ease;
 }
 
-.modal-overview {
-  font-size: 17px;
-  line-height: 1.55;
-  color: #d1d1d6;
-  max-width: 900px;
-  margin-bottom: 28px;
-}
-
-.modal-actions-row {
-  margin-bottom: 28px;
-}
-
-.modal-action-btn {
-  display: -webkit-inline-flex;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 32px;
-  border-radius: 18px;
-  border: none;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  background: #ffffff;
-  color: #000000;
-  transition: -webkit-transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.35s ease;
-}
-
-body.mode-5way .modal-action-btn.focused,
-body.mode-pointer .modal-action-btn:hover {
-  -webkit-transform: scale(1.08) translateZ(0);
-  transform: scale(1.08) translateZ(0);
-  box-shadow: 0 0 24px rgba(255, 255, 255, 0.6), 0 8px 24px rgba(0, 0, 0, 0.5);
-  background: #ffffff;
-  color: #000000;
+.modal-hero-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.70) 28%, rgba(0, 0, 0, 0.20) 60%, rgba(0, 0, 0, 0.40) 100%),
+    linear-gradient(to right, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.55) 45%, transparent 75%);
 }
 
 /* --------------------------------------------------------------------------
-   Sleek Glassmorphic Stream Selection Drawer (Matching Apple TV Aesthetic)
+   Hero Metadata Overlay (Stage 2 Fade-In)
+   -------------------------------------------------------------------------- */
+
+.modal-hero-content {
+  position: absolute;
+  left: 80px;
+  bottom: 70px;
+  right: 80px;
+  z-index: 20;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  pointer-events: auto;
+  opacity: 0;
+  -webkit-transform: translateY(24px) translateZ(0);
+  transform: translateY(24px) translateZ(0);
+  transition: opacity 0.70s cubic-bezier(0.16, 1, 0.3, 1),
+              -webkit-transform 0.70s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.70s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* In Stage 2, Stage 3, and Stage 4, metadata is visible */
+.stage-2-meta .modal-hero-content,
+.stage-3-fullscreen .modal-hero-content {
+  opacity: 1;
+  -webkit-transform: translateY(0) translateZ(0);
+  transform: translateY(0) translateZ(0);
+}
+
+/* Top Tag Pill ("All Episodes Now Available") */
+.hero-top-tag-wrapper {
+  margin-bottom: 12px;
+}
+
+.modal-tag-pill {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: #ffffff;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+/* Bold Display Title (SF Pro Rounded Heavy) */
+.modal-display-title {
+  font-family: 'SF Pro Rounded', 'San Francisco Pro', sans-serif;
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: -1.2px;
+  text-transform: uppercase;
+  color: #ffffff;
+  line-height: 1.05;
+  margin: 0 0 14px 0;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
+}
+
+/* Metadata Line 1: Apple TV Icon + Genres + Pink Age Badge */
+.modal-meta-line-1 {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 14px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.60);
+}
+
+.apple-tv-badge {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.apple-tv-svg {
+  width: 18px;
+  height: 18px;
+}
+
+.apple-tv-label {
+  font-size: 15px;
+  font-weight: 700;
+  margin-left: 1px;
+}
+
+.meta-category-text {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Vibrant Pink Age Certification Circle Badge (e.g. "15", "18", "12") */
+.meta-age-circle {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e0245e;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  margin-left: 4px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Overview Text (2-3 lines with clean ellipsis) */
+.modal-overview-text {
+  font-size: 16px;
+  line-height: 1.48;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 680px;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.80);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Metadata Line 2: Air Date, Runtime + Spec Badges (4K, Dolby Vision, Atmos, CC, SDH, AD) */
+.modal-meta-line-2 {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 22px;
+}
+
+.meta-date-runtime {
+  color: rgba(255, 255, 255, 0.80);
+}
+
+.tech-badges-group {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tech-badge-pill {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.4px;
+}
+
+.tech-badge-svg {
+  height: 13px;
+  filter: brightness(0) invert(1);
+  opacity: 0.90;
+}
+
+/* Action Buttons Row */
+.modal-buttons-row {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+/* Primary Play Button (Glass pill in Stage 2, Solid White Pill in Stage 3 Focus) */
+.apple-primary-btn {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 34px;
+  border-radius: 9999px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  transition: -webkit-transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.30s ease,
+              color 0.30s ease,
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.mode-5way .apple-primary-btn.focused,
+body.mode-pointer .apple-primary-btn:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  -webkit-transform: scale(1.06) translateZ(0);
+  transform: scale(1.06) translateZ(0);
+  box-shadow: 0 0 32px rgba(255, 255, 255, 0.70), 0 10px 24px rgba(0, 0, 0, 0.50) !important;
+  font-weight: 800 !important;
+  outline: none !important;
+}
+
+/* Circular Icon Buttons (+ Watchlist, More Details) */
+.apple-icon-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  transition: -webkit-transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.30s ease,
+              color 0.30s ease,
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.mode-5way .apple-icon-btn.focused,
+body.mode-pointer .apple-icon-btn:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  -webkit-transform: scale(1.12) translateZ(0);
+  transform: scale(1.12) translateZ(0);
+  box-shadow: 0 0 28px rgba(255, 255, 255, 0.60) !important;
+  outline: none !important;
+}
+
+/* Sub-Info Text below buttons */
+.modal-sub-info {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 4px;
+}
+
+/* Starring cast section (bottom right of hero card) */
+.modal-starring {
+  position: absolute;
+  right: 0;
+  bottom: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.70);
+  max-width: 340px;
+  text-align: left;
+}
+
+.starring-label {
+  display: block;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.90);
+  margin-bottom: 2px;
+}
+
+.starring-names {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.70);
+}
+
+/* Bottom Card Peek (Subtle glimpse of next section) */
+.modal-bottom-peek {
+  position: absolute;
+  bottom: -32px;
+  left: 80px;
+  right: 80px;
+  display: -webkit-flex;
+  display: flex;
+  gap: 24px;
+  opacity: 0.40;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.bottom-peek-card {
+  width: 320px;
+  height: 65px;
+  border-radius: 16px 16px 0 0;
+  background: rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.20);
+}
+
+/* --------------------------------------------------------------------------
+   Scrollable Content (Stages 4 & 5: Seasons, Episodes, Trailers, Related, Cast)
+   -------------------------------------------------------------------------- */
+
+.modal-scroll-container {
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 15;
+  pointer-events: auto;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.modal-scroll-container::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
+.scroll-hero-spacer {
+  height: 1080px;
+  width: 100%;
+  pointer-events: none;
+}
+
+.scroll-content-body {
+  position: relative;
+  background: #000000;
+  padding: 40px 80px 140px 80px;
+  box-sizing: border-box;
+  min-height: 1080px;
+}
+
+/* Centered Show Title in Lower Content */
+.scroll-show-title {
+  font-family: 'SF Pro Rounded', 'San Francisco Pro', sans-serif;
+  font-size: 46px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 28px;
+  letter-spacing: -0.5px;
+}
+
+/* Season Tabs Bar */
+.season-tabs-container {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+
+.season-tabs-bar {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.season-tab-btn {
+  padding: 10px 24px;
+  border-radius: 9999px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  transition: -webkit-transform 0.30s ease,
+              transform 0.30s ease,
+              background 0.30s ease,
+              color 0.30s ease;
+}
+
+.season-tab-btn.active {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+body.mode-5way .season-tab-btn.focused,
+body.mode-pointer .season-tab-btn:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
+  -webkit-transform: scale(1.06);
+  transform: scale(1.06);
+  outline: none !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.50);
+}
+
+/* Content Row Sections */
+.content-row-section {
+  margin-bottom: 48px;
+}
+
+.section-heading {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 18px;
+  letter-spacing: -0.3px;
+}
+
+/* Episodes Horizontal Row */
+.episodes-cards-row {
+  display: -webkit-flex;
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  padding: 16px 8px 36px 8px;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.episodes-cards-row::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
+.episode-card {
+  width: 320px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  cursor: pointer;
+  position: relative;
+  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.30s ease,
+              border-color 0.30s ease,
+              box-shadow 0.40s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* FOCUSED EPISODE CARD (Matching Image 4: Frosted Glass Container) */
+body.mode-5way .episode-card.focused,
+body.mode-pointer .episode-card:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.32) !important;
+  border-radius: 20px;
+  padding: 12px;
+  margin: -12px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.75);
+  -webkit-transform: scale(1.04) translateZ(0);
+  transform: scale(1.04) translateZ(0);
+  outline: none !important;
+  z-index: 10;
+}
+
+.episode-thumb-wrap {
+  width: 320px;
+  height: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: #16161a;
+}
+
+.episode-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.episode-duration-pill {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.78);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.episode-info-box {
+  padding: 12px 6px 14px 6px;
+}
+
+.episode-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.60);
+  margin-bottom: 3px;
+}
+
+.episode-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.episode-overview {
+  font-size: 13px;
+  line-height: 1.40;
+  color: rgba(255, 255, 255, 0.65);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.episode-bottom-meta {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.50);
+}
+
+/* Trailers Horizontal Row */
+.trailers-cards-row {
+  display: -webkit-flex;
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 12px 6px 36px 6px;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.trailers-cards-row::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
+.trailer-card {
+  width: 280px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: -webkit-transform 0.35s ease,
+              transform 0.35s ease,
+              box-shadow 0.35s ease;
+}
+
+.trailer-thumb-wrap {
+  width: 280px;
+  height: 158px;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  background: #16161a;
+}
+
+.trailer-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trailer-play-overlay {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.trailer-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-top: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.mode-5way .trailer-card.focused,
+body.mode-pointer .trailer-card:hover {
+  -webkit-transform: scale(1.06);
+  transform: scale(1.06);
+  outline: none !important;
+}
+
+body.mode-5way .trailer-card.focused .trailer-thumb-wrap,
+body.mode-pointer .trailer-card:hover .trailer-thumb-wrap {
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.50), 0 12px 30px rgba(0, 0, 0, 0.80);
+}
+
+/* Related Titles Horizontal Row (Stage 5: 2:3 Vertical Posters with Apple TV badge) */
+.related-cards-row {
+  display: -webkit-flex;
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 12px 6px 36px 6px;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.related-cards-row::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
+.related-card {
+  width: 190px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.related-poster-wrap {
+  width: 190px;
+  height: 285px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: #18181e;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.50);
+  transition: box-shadow 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease;
+}
+
+.related-poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.related-apple-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.70);
+  border-radius: 8px;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.apple-logo-tiny {
+  font-size: 12px;
+}
+
+.related-details {
+  padding-top: 8px;
+}
+
+.related-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.related-subtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+body.mode-5way .related-card.focused,
+body.mode-pointer .related-card:hover {
+  -webkit-transform: scale(1.08) translateZ(0);
+  transform: scale(1.08) translateZ(0);
+  outline: none !important;
+  z-index: 10;
+}
+
+body.mode-5way .related-card.focused .related-poster-wrap,
+body.mode-pointer .related-card:hover .related-poster-wrap {
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.60), 0 16px 40px rgba(0, 0, 0, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.80);
+}
+
+/* Cast & Crew Horizontal Row (Stage 5: 140px Circular Avatars) */
+.cast-avatars-row {
+  display: -webkit-flex;
+  display: flex;
+  gap: 32px;
+  overflow-x: auto;
+  padding: 12px 6px 40px 6px;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.cast-avatars-row::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
+.cast-avatar-card {
+  width: 140px;
+  flex-shrink: 0;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cast-avatar-circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #222228;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.60);
+  margin-bottom: 12px;
+  transition: box-shadow 0.40s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cast-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cast-placeholder {
+  width: 100%;
+  height: 100%;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  background: #1c1c22;
+  color: #71717a;
+}
+
+.cast-actor-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 3px;
+  max-width: 130px;
+}
+
+.cast-character-name {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 130px;
+}
+
+body.mode-5way .cast-avatar-card.focused,
+body.mode-pointer .cast-avatar-card:hover {
+  -webkit-transform: scale(1.10) translateZ(0);
+  transform: scale(1.10) translateZ(0);
+  outline: none !important;
+}
+
+body.mode-5way .cast-avatar-card.focused .cast-avatar-circle,
+body.mode-pointer .cast-avatar-card:hover .cast-avatar-circle {
+  box-shadow: 0 0 0 3.5px #ffffff, 0 16px 40px rgba(0, 0, 0, 0.85);
+}
+
+/* --------------------------------------------------------------------------
+   Sleek Glassmorphic Stream Selection Drawer
    -------------------------------------------------------------------------- */
 
 .modal-stream-drawer {
-  margin-top: 18px;
-  margin-bottom: 24px;
-  padding: 24px;
-  border-radius: 20px;
-  background: rgba(18, 18, 22, 0.90);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  width: 820px;
+  max-height: 480px;
+  padding: 28px;
+  border-radius: 24px;
+  background: rgba(18, 18, 22, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  z-index: 100;
 }
 
 .stream-drawer-header {
@@ -873,7 +1707,7 @@ body.mode-pointer .modal-action-btn:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .stream-drawer-title-group {
@@ -911,9 +1745,9 @@ body.mode-pointer .modal-action-btn:hover {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.35s ease;
+  transition: -webkit-transform 0.35s ease,
+              transform 0.35s ease,
+              background 0.30s ease;
 }
 
 body.mode-5way .stream-drawer-close.focused,
@@ -921,7 +1755,8 @@ body.mode-pointer .stream-drawer-close:hover {
   -webkit-transform: scale(1.12);
   transform: scale(1.12);
   background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 0 14px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.40);
+  outline: none !important;
 }
 
 .modal-stream-cards-grid {
@@ -929,7 +1764,7 @@ body.mode-pointer .stream-drawer-close:hover {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 280px;
+  max-height: 320px;
   overflow-y: auto;
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
@@ -946,27 +1781,27 @@ body.mode-pointer .stream-drawer-close:hover {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   padding: 14px 22px;
   color: #ffffff;
   cursor: pointer;
   box-sizing: border-box;
-  transition: -webkit-transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.35s ease,
-              border-color 0.35s ease,
-              box-shadow 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: -webkit-transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.30s ease,
+              border-color 0.30s ease,
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body.mode-5way .stream-card-btn.focused,
 body.mode-pointer .stream-card-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.20);
   border-color: rgba(255, 255, 255, 0.75);
   -webkit-transform: scale(1.025) translateZ(0);
   transform: scale(1.025) translateZ(0);
-  box-shadow: 0 0 24px rgba(255, 255, 255, 0.35), 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.40), 0 8px 24px rgba(0, 0, 0, 0.50);
   outline: none !important;
 }
 
@@ -1013,78 +1848,18 @@ body.mode-pointer .stream-card-btn:hover {
   font-weight: 700;
 }
 
-/* Cast Section */
-.modal-cast-section {
-  margin-top: 14px;
-}
-
-.cast-heading {
+/* State message pill */
+.loading-state-pill {
+  padding: 30px 40px;
+  color: rgba(255, 255, 255, 0.60);
   font-size: 16px;
-  font-weight: 600;
-  color: #a1a1aa;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 16px;
+  font-weight: 500;
 }
 
-.modal-cast-grid {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.actor-card {
-  width: 140px;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.04);
-  padding: 12px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.40s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.actor-photo {
-  width: 72px;
-  height: 72px;
-  border-radius: 16px;
-  object-fit: cover;
-  margin-bottom: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.actor-photo-placeholder {
-  width: 72px;
-  height: 72px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.1);
-  display: -webkit-flex;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  margin-bottom: 8px;
-}
-
-.actor-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: #ffffff;
-  line-height: 1.2;
-}
-
-.actor-character {
-  font-size: 11px;
-  color: #8e8e93;
-  margin-top: 2px;
-  line-height: 1.2;
+.no-episodes-msg {
+  padding: 30px 40px;
+  color: rgba(255, 255, 255, 0.50);
+  font-size: 15px;
 }
 
 /* --------------------------------------------------------------------------

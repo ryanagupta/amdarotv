@@ -142,60 +142,192 @@
       </div>
     </main>
 
-    <!-- Comprehensive Media Details Modal Overlay (Backdrop, Posters, Cast & Metadata) -->
+    <!-- Comprehensive Media Details Modal Overlay (Apple TV+ 1:1 Experience) -->
     <div id="media-details-modal" class="media-details-modal" aria-hidden="true" role="dialog">
-      <div class="modal-backdrop-blur" id="modal-backdrop-img"></div>
-      <div class="modal-scrim"></div>
-      <div class="modal-content glass-panel">
-        <button id="modal-close-btn" class="modal-close-btn focusable" tabindex="0" aria-label="Close modal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width: 20px; height: 20px;">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
+      <!-- Top Navigation Hint (Shown in Full Screen mode: Stage 3) -->
+      <div id="modal-top-hint" class="modal-top-hint">
+        <svg class="hint-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="18 15 12 9 6 15"/>
+        </svg>
+        <span>Press Up for Playback Controls</span>
+      </div>
 
-        <div class="modal-body-layout">
-          <!-- Poster -->
-          <div class="modal-poster-wrapper">
-            <img id="modal-poster-img" class="modal-poster-img" src="" alt="Poster">
+      <!-- Close Button (Top right, accessible via remote or pointer) -->
+      <button id="modal-close-btn" class="modal-close-btn focusable" tabindex="0" aria-label="Close modal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width: 20px; height: 20px;">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <!-- Carousel Stage Wrapper (Contains Left Peek, Hero Card, Right Peek) -->
+      <div id="modal-carousel-stage" class="modal-carousel-stage stage-1-card">
+        
+        <!-- Left Peek Card (Previous title in search results) -->
+        <div id="modal-peek-left" class="modal-peek-card peek-left" aria-hidden="true">
+          <img id="peek-left-img" class="peek-img" src="" alt="">
+        </div>
+
+        <!-- Main Hero Card -->
+        <div id="modal-hero-card" class="modal-hero-card">
+          <!-- High-Res Background Backdrop / Video Container -->
+          <div id="modal-hero-bg" class="modal-hero-bg">
+            <img id="modal-hero-bg-img" class="modal-hero-bg-img" src="" alt="">
+            <div class="modal-hero-gradient-overlay"></div>
           </div>
 
-          <!-- Metadata & Overview -->
-          <div class="modal-details-col">
-            <h2 id="modal-title" class="modal-title"></h2>
-            <div id="modal-meta-strip" class="modal-meta-strip"></div>
-            <p id="modal-overview" class="modal-overview"></p>
+          <!-- Metadata & Info Overlay (Fades in at Stage 2) -->
+          <div id="modal-hero-content" class="modal-hero-content">
+            <!-- Top Tag Pill -->
+            <div class="hero-top-tag-wrapper">
+              <span id="modal-tag-pill" class="modal-tag-pill">All Episodes Now Available</span>
+            </div>
 
-            <div class="modal-actions-row">
-              <button id="modal-play-btn" class="modal-action-btn primary focusable" tabindex="0">
-                <svg id="modal-play-icon" viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
-                  <polygon points="5 3 19 12 5 21 5 3"/>
+            <!-- Big Display Title (SF Pro Rounded Heavy) -->
+            <h1 id="modal-title" class="modal-display-title">TED LASSO</h1>
+
+            <!-- Metadata Line 1: Apple TV Icon + Type/Genres + Age Certification -->
+            <div class="modal-meta-line-1">
+              <span class="apple-tv-badge">
+                <svg class="apple-tv-svg" viewBox="0 0 170 170" fill="currentColor">
+                  <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.05-7.68-7.85-11.93-14.39-7.05-10.85-12.24-22.75-15.57-35.7-3.33-12.96-5-24.96-5-36.03 0-14.86 3.65-27.4 10.96-37.62 7.3-10.22 17.06-15.46 29.28-15.74 5.37 0 11.39 1.45 18.06 4.35 6.67 2.9 11.25 4.39 13.74 4.47 2.11 0 6.84-1.57 14.18-4.7 7.35-3.13 13.43-4.54 18.26-4.23 13.67.6 24.32 5.56 31.95 14.89-12.19 7.39-18.17 17.53-17.94 30.41.22 10.27 4.28 18.9 12.17 25.88 7.89 6.99 17.24 11.14 28.05 12.47-2.34 7.07-5.2 14.07-8.58 21.01zM119.22 31.91c0-7.39 2.68-14.54 8.04-21.46 5.36-6.91 12.01-11.13 19.95-12.65.23 1.1.34 2.19.34 3.27 0 7.39-2.73 14.5-8.19 21.34-5.46 6.84-12.23 11-20.31 12.49-.07-.98-.1-1.98-.1-2.99z"/>
                 </svg>
-                <span id="modal-play-text">Play Now</span>
+                <span class="apple-tv-label">tv</span>
+              </span>
+              <span id="modal-category-text" class="meta-category-text">TV Show • Comedy • Sport</span>
+              <span id="modal-age-badge" class="meta-age-circle">15</span>
+            </div>
+
+            <!-- Overview Text -->
+            <p id="modal-overview" class="modal-overview-text"></p>
+
+            <!-- Metadata Line 2: Air Date / Runtime + Tech Badges -->
+            <div class="modal-meta-line-2">
+              <span id="modal-date-runtime" class="meta-date-runtime">Aug 14, 2020 • 30 mins</span>
+              <div class="tech-badges-group">
+                <span class="tech-badge tech-badge-pill">4K</span>
+                <img src="icons/badge_dolbyvision.svg" class="tech-badge-svg" alt="Dolby Vision">
+                <img src="icons/badge_dolbyatmos.svg" class="tech-badge-svg" alt="Dolby Atmos">
+                <span class="tech-badge tech-badge-pill">CC</span>
+                <span class="tech-badge tech-badge-pill">SDH</span>
+                <span class="tech-badge tech-badge-pill">AD</span>
+              </div>
+            </div>
+
+            <!-- Buttons Row -->
+            <div class="modal-buttons-row">
+              <!-- Main Action Button -->
+              <button id="modal-play-btn" class="apple-primary-btn focusable" tabindex="0">
+                <span id="modal-play-btn-text">Accept 3 Months Free</span>
+              </button>
+
+              <!-- Plus Button (Watchlist) -->
+              <button id="modal-watchlist-btn" class="apple-icon-btn focusable" tabindex="0" aria-label="Add to Up Next">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 22px; height: 22px;">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
+
+              <!-- More / Episodes Button -->
+              <button id="modal-more-btn" class="apple-icon-btn focusable" tabindex="0" aria-label="Episodes and Details">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width: 20px; height: 20px;">
+                  <line x1="8" y1="6" x2="21" y2="6"/>
+                  <line x1="8" y1="12" x2="21" y2="12"/>
+                  <line x1="8" y1="18" x2="21" y2="18"/>
+                  <line x1="3" y1="6" x2="3.01" y2="6"/>
+                  <line x1="3" y1="12" x2="3.01" y2="12"/>
+                  <line x1="3" y1="18" x2="3.01" y2="18"/>
+                </svg>
               </button>
             </div>
 
-            <!-- Sleek Glassmorphic Stream Selection Drawer -->
-            <div id="modal-stream-selector" class="modal-stream-drawer glass-panel" style="display: none;">
-              <div class="stream-drawer-header">
-                <div class="stream-drawer-title-group">
-                  <span class="stream-drawer-eyebrow">AIOSTREAMS</span>
-                  <h4 class="stream-drawer-title">Choose Stream Quality</h4>
-                </div>
-                <button id="modal-stream-close-btn" class="stream-drawer-close focusable" tabindex="0" aria-label="Close Streams">✕</button>
-              </div>
-              <div id="modal-stream-list" class="modal-stream-cards-grid"></div>
+            <!-- Sub-Info Text below buttons -->
+            <div id="modal-sub-info" class="modal-sub-info">
+              3 months free, then £9.99/month. Cancel at any time. Terms apply.
             </div>
 
-            <!-- Cast & Actor Information -->
-            <div class="modal-cast-section">
-              <h3 class="cast-heading">Featured Cast</h3>
-              <div id="modal-cast-grid" class="modal-cast-grid">
-                <!-- Rendered dynamically -->
-              </div>
+            <!-- Starring Section (bottom right) -->
+            <div id="modal-starring" class="modal-starring">
+              <span class="starring-label">Starring</span>
+              <span id="starring-names" class="starring-names">Jason Sudeikis, Hannah Waddingham, Juno Temple</span>
+            </div>
+          </div>
+
+          <!-- Bottom Card Peek (Top edge of episodes row peeking up) -->
+          <div id="modal-bottom-peek" class="modal-bottom-peek">
+            <div class="bottom-peek-card"></div>
+            <div class="bottom-peek-card"></div>
+            <div class="bottom-peek-card"></div>
+            <div class="bottom-peek-card"></div>
+          </div>
+        </div>
+
+        <!-- Right Peek Card (Next title in search results) -->
+        <div id="modal-peek-right" class="modal-peek-card peek-right" aria-hidden="true">
+          <img id="peek-right-img" class="peek-img" src="" alt="">
+        </div>
+      </div>
+
+      <!-- Scrollable Lower Content (Stages 4 & 5) -->
+      <div id="modal-scroll-container" class="modal-scroll-container">
+        <!-- Spacer for initial 100vh hero height -->
+        <div class="scroll-hero-spacer"></div>
+
+        <div class="scroll-content-body">
+          <!-- Centered Show Title (Stage 4) -->
+          <h2 id="modal-scroll-title" class="scroll-show-title">TED LASSO</h2>
+
+          <!-- Season Tabs Row (TV Shows) -->
+          <div id="modal-season-tabs-container" class="season-tabs-container">
+            <div id="modal-season-tabs" class="season-tabs-bar" role="tablist">
+              <!-- Dynamically populated: Season 1, Season 2, Season 3... -->
+            </div>
+          </div>
+
+          <!-- Episodes Horizontal Carousel -->
+          <div id="modal-episodes-section" class="content-row-section">
+            <div id="modal-episodes-list" class="episodes-cards-row" role="region" aria-label="Episodes">
+              <!-- Dynamically populated episode cards matching Image 4 -->
+            </div>
+          </div>
+
+          <!-- Trailers & Bonus Row -->
+          <div id="modal-trailers-section" class="content-row-section">
+            <h3 class="section-heading">Trailers</h3>
+            <div id="modal-trailers-list" class="trailers-cards-row">
+              <!-- Dynamically populated trailers -->
+            </div>
+          </div>
+
+          <!-- Related Titles Row (Stage 5) -->
+          <div id="modal-related-section" class="content-row-section">
+            <h3 class="section-heading">Related</h3>
+            <div id="modal-related-list" class="related-cards-row">
+              <!-- Dynamically populated portrait cards matching Image 5 -->
+            </div>
+          </div>
+
+          <!-- Cast & Crew Row (Stage 5) -->
+          <div id="modal-cast-section" class="content-row-section">
+            <h3 class="section-heading">Cast & Crew</h3>
+            <div id="modal-cast-list" class="cast-avatars-row">
+              <!-- Dynamically populated circular avatar cards matching Image 5 -->
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Sleek Stream Selection Drawer (Overlay when streams are loading/choosing) -->
+      <div id="modal-stream-selector" class="modal-stream-drawer glass-panel" style="display: none;">
+        <div class="stream-drawer-header">
+          <div class="stream-drawer-title-group">
+            <span class="stream-drawer-eyebrow">AIOSTREAMS</span>
+            <h4 id="stream-drawer-title" class="stream-drawer-title">Choose Stream Quality</h4>
+          </div>
+          <button id="modal-stream-close-btn" class="stream-drawer-close focusable" tabindex="0" aria-label="Close Streams">✕</button>
+        </div>
+        <div id="modal-stream-list" class="modal-stream-cards-grid"></div>
       </div>
     </div>
 
@@ -256,6 +388,7 @@
   <script src="js/player.js"></script>
   <script src="js/keyboard.js"></script>
   <script src="js/navbar.js"></script>
+  <script src="js/detail-view.js"></script>
   <script src="js/search.js"></script>
   <script src="js/app.js"></script>
 </body>
