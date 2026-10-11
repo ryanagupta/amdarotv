@@ -343,9 +343,9 @@ body.mode-pointer .focusable:hover {
 }
 
 .top-nav-chevron {
-  width: 10px;
+  width: 12px;
   height: 18px;
-  color: #D1D1D6;
+  color: #E5E5EA;
   flex-shrink: 0;
   display: block;
 }
