@@ -410,15 +410,15 @@ body.mode-pointer .focusable:hover {
   display: flex;
   -webkit-align-items: center;
   align-items: center;
-  gap: 20px;
+  gap: 22px;
   z-index: 100;
   pointer-events: none;
   user-select: none;
 }
 
 .search-prompt-icon {
-  width: 44px;
-  height: 44px;
+  width: 50px;
+  height: 50px;
   color: #6B6B6C;
   flex-shrink: 0;
   display: block;
@@ -428,7 +428,7 @@ body.mode-pointer .focusable:hover {
   margin: 0;
   padding: 0;
   font-family: 'San Francisco Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 44px;
+  font-size: 50px;
   font-weight: 700;
   color: #6B6B6C;
   letter-spacing: -0.6px;
@@ -437,25 +437,28 @@ body.mode-pointer .focusable:hover {
 }
 
 /* --------------------------------------------------------------------------
-   APPLE TV+ KEYBOARD SOURCE SWITCHER / SLIDER (1:1 with Reference Images)
+   APPLE TV+ KEYBOARD SOURCE SWITCHER / SLIDER (1:1 Clean Capsule Profile)
    -------------------------------------------------------------------------- */
 
 .keyboard-source-switcher {
   position: fixed;
-  top: 206px;
+  top: 216px;
   left: 70px;
-  width: 310px;
+  width: 300px;
   height: 40px;
-  background: #232225;
+  background: #1C1B1E;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   display: -webkit-flex;
   display: flex;
   -webkit-align-items: center;
   align-items: center;
   padding: 3px;
-  gap: 3px;
+  gap: 0;
+  margin: 0;
+  overflow: hidden;
   z-index: 100;
   box-sizing: border-box;
 }
@@ -465,8 +468,9 @@ body.mode-pointer .focusable:hover {
   flex: 1;
   height: 100%;
   border-radius: 9999px;
-  border: none;
-  outline: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   background: transparent;
   color: #8E8E93;
   font-family: 'San Francisco Pro', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -481,25 +485,31 @@ body.mode-pointer .focusable:hover {
   -webkit-justify-content: center;
   justify-content: center;
   cursor: pointer;
-  -webkit-transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
-  transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  -webkit-transition: background 0.18s ease, color 0.18s ease;
+  transition: background 0.18s ease, color 0.18s ease;
   user-select: none;
   padding: 0;
   margin: 0;
 }
 
-/* Active Unfocused State (Image 1) */
+/* Active Tab: Solid neutral medium-dark gray with sharp white text */
 .switcher-segment.active {
-  background: #515154;
-  color: #FFFFFF;
+  background: #4A4A4D !important;
+  color: #FFFFFF !important;
 }
 
-/* Focused / Hover State (Images 2 & 3) */
+/* Inactive Tab: Transparent with crisp muted gray text */
+.switcher-segment:not(.active) {
+  background: transparent !important;
+  color: #8E8E93 !important;
+}
+
+/* Focused State: High contrast white with bold black text */
 .switcher-segment:focus,
 .switcher-segment.focused {
   background: #FFFFFF !important;
   color: #000000 !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
 }
 
 /* --------------------------------------------------------------------------
