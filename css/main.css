@@ -1,0 +1,1350 @@
+/* ==========================================================================
+   webOS 4.0 TV App - Base Stylesheet
+   Target: LG C8 OLED (1920x1080 UI canvas, Chromium 53 engine)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   San Francisco Pro Font Declarations
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'San Francisco Pro';
+  src: url('../San-Francisco-Pro-Fonts-master/SF-Pro.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'San Francisco Pro';
+  src: url('../San-Francisco-Pro-Fonts-master/SF-Pro-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'San Francisco Pro';
+  src: url('../San-Francisco-Pro-Fonts-master/SF-Pro-Text-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'San Francisco Pro';
+  src: url('../San-Francisco-Pro-Fonts-master/SF-Pro-Text-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'San Francisco Pro';
+  src: url('../San-Francisco-Pro-Fonts-master/SF-Pro-Text-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'San Francisco Pro';
+  src: url('../San-Francisco-Pro-Fonts-master/SF-Pro-Text-Semibold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'San Francisco Pro';
+  src: url('../San-Francisco-Pro-Fonts-master/SF-Pro-Text-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'San Francisco Pro';
+  src: url('../San-Francisco-Pro-Fonts-master/SF-Pro-Display-Heavy.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+/* --------------------------------------------------------------------------
+   Universal Reset & Deep Dark Grey Base Canvas (#0c0c0e)
+   -------------------------------------------------------------------------- */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  user-select: none;
+  font-family: 'San Francisco Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:focus,
+:focus-visible,
+.focusable:focus,
+.focusable.focused,
+button:focus,
+input:focus {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #0c0c0e;
+  color: #f5f5f7;
+  font-family: 'San Francisco Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#app {
+  width: 1920px;
+  height: 1080px;
+  position: relative;
+  overflow: hidden;
+  background-color: #0c0c0e;
+}
+
+/* --------------------------------------------------------------------------
+   Apple-Style Spatial Navigation & Selection System (NO BLUE OUTLINES)
+   Features smooth spring scaling, luminous white rim, and frosted elevation
+   -------------------------------------------------------------------------- */
+
+.focusable {
+  transition: -webkit-transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.35s ease,
+              border-color 0.35s ease,
+              color 0.35s ease;
+  position: relative;
+}
+
+body.mode-pointer .focusable {
+  cursor: pointer;
+}
+
+/* Apple-style Enlarge & Luminous Highlight on Focus / Hover */
+body.mode-5way .focusable.focused,
+body.mode-pointer .focusable:hover {
+  outline: none !important;
+  -webkit-transform: scale(1.08) translateZ(0);
+  transform: scale(1.08) translateZ(0);
+  background-color: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.40) !important;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.40),
+    0 0 0 1.5px rgba(255, 255, 255, 0.40),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+  color: #ffffff !important;
+  z-index: 30 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Hardware-Accelerated Glassmorphism (Subtle Shadows & Low Overhead)
+   -------------------------------------------------------------------------- */
+
+.glass-panel {
+  position: relative;
+  background: rgba(20, 20, 24, 0.72);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    rgba(14, 14, 16, 0.70) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.16);
+  border-left-color: rgba(255, 255, 255, 0.11);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 4px 16px 0 rgba(0, 0, 0, 0.20);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+@supports ((-webkit-backdrop-filter: blur(12px)) or (backdrop-filter: blur(12px))) {
+  .glass-panel,
+  .universal-nav,
+  .kb-tile {
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Top-Left Universal Navbar
+   Always collapsed by default into 3-line menu;
+   When uncollapsed, 3-line menu is hidden and nav buttons are shown!
+   Aligned vertically in line with search bar (top: 24px, height: 56px)
+   -------------------------------------------------------------------------- */
+
+.universal-nav {
+  position: fixed;
+  top: 24px;
+  left: 32px;
+  height: 56px;
+  z-index: 100;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  border-radius: 28px;
+  background: rgba(20, 20, 24, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 4px 14px 0 rgba(0, 0, 0, 0.18);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: width 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 3-Line Hamburger Menu Toggle Button */
+.nav-toggle-btn {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.hamburger-line {
+  width: 22px;
+  height: 2px;
+  background-color: #f5f5f7;
+  border-radius: 1px;
+  margin: 2.5px 0;
+}
+
+/* Collapsed State: ONLY the 3-line menu icon is visible */
+.universal-nav.collapsed .nav-toggle-btn {
+  display: -webkit-flex;
+  display: flex;
+}
+
+.universal-nav.collapsed .nav-items-wrapper {
+  display: none !important;
+}
+
+/* Uncollapsed (Expanded) State: 3-line menu icon is HIDDEN! */
+.universal-nav.expanded .nav-toggle-btn {
+  display: none !important;
+}
+
+.universal-nav.expanded .nav-items-wrapper {
+  display: -webkit-flex !important;
+  display: flex !important;
+  padding: 4px 6px;
+}
+
+/* Nav Items Container */
+.nav-items-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Hardware-Accelerated Sliding Indicator */
+.nav-slider {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.10),
+    0 2px 8px 0 rgba(0, 0, 0, 0.14);
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  transition: -webkit-transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              width 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Individual Navigation Buttons */
+.nav-btn {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  height: 48px;
+  border-radius: 24px;
+  border: none;
+  background: transparent;
+  color: #a1a1aa;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-btn .nav-icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.nav-btn.inactive {
+  opacity: 0.32;
+  color: #71717a;
+  cursor: default;
+}
+
+.nav-btn.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Middle-Top Search Bar
+   Aligned vertically in line with the menu button (top: 24px, height: 56px)
+   Substantially bigger: width 980px, height 56px, font size 22px
+   -------------------------------------------------------------------------- */
+
+.middle-top-search {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  width: 980px;
+  height: 56px;
+  z-index: 100;
+}
+
+.search-input-box {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 24px;
+  border-radius: 28px;
+  cursor: pointer;
+  position: relative;
+}
+
+body.mode-5way .search-input-box.focused,
+body.mode-pointer .search-input-box:hover {
+  -webkit-transform: scale(1.02) translateZ(0) !important;
+  transform: scale(1.02) translateZ(0) !important;
+}
+
+.search-input-icon {
+  width: 26px;
+  height: 26px;
+  stroke: #8e8e93;
+  margin-right: 18px;
+  flex-shrink: 0;
+}
+
+.search-input-field {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  cursor: default;
+}
+
+.search-input-field::placeholder {
+  color: #636366;
+}
+
+/* --------------------------------------------------------------------------
+   Left-Side Alphabet Keyboard (5 letters per row, collapsible)
+   Engineered for Chromium 53: Uses Flexbox rows & margins (NO CSS Grid, NO flex gap)
+   -------------------------------------------------------------------------- */
+
+.onscreen-keyboard {
+  position: absolute;
+  top: 104px;
+  left: 32px;
+  z-index: 50;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  transition: -webkit-transform 0.46s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.46s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.40s ease;
+}
+
+/* Collapsed into left edge when user moves focus onto media tiles */
+.onscreen-keyboard.collapsed-left {
+  -webkit-transform: translate3d(-380px, 0, 0);
+  transform: translate3d(-380px, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Flexbox Row Container (5 Letters Per Row) */
+.kb-row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.kb-row:last-child {
+  margin-bottom: 0;
+}
+
+/* Individual Glassmorphic Letter Tile (60x60px) */
+.kb-tile {
+  width: 60px;
+  height: 60px;
+  margin-right: 8px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.16);
+  border-left-color: rgba(255, 255, 255, 0.11);
+  background: rgba(22, 22, 26, 0.72);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    rgba(14, 14, 16, 0.70) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 3px 10px 0 rgba(0, 0, 0, 0.20);
+  color: #f5f5f7;
+  font-size: 22px;
+  font-weight: 600;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s ease,
+              border-color 0.35s ease,
+              color 0.35s ease;
+  position: relative;
+}
+
+.kb-tile:last-child {
+  margin-right: 0;
+}
+
+/* Wide Action Tiles (Space & Delete in Row 6) */
+.kb-tile-action {
+  width: 128px;
+  height: 60px;
+  font-size: 15px;
+  letter-spacing: -0.2px;
+}
+
+/* Clean OSK Hover & Focus: Subtle enlargement with NO opaque overlay */
+body.mode-5way .kb-tile.focused,
+body.mode-pointer .kb-tile:hover {
+  outline: none !important;
+  -webkit-transform: scale(1.10) translateZ(0);
+  transform: scale(1.10) translateZ(0);
+  background: rgba(22, 22, 26, 0.72) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.03) 40%,
+    rgba(14, 14, 16, 0.72) 100%
+  ) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 8px 22px rgba(0, 0, 0, 0.36) !important;
+  color: #ffffff !important;
+  z-index: 30 !important;
+}
+
+.kb-tile:active {
+  -webkit-transform: scale(0.96) translateZ(0);
+  transform: scale(0.96) translateZ(0);
+}
+
+/* --------------------------------------------------------------------------
+   Dynamic TMDB & TVDB Results Grid: Centered in the middle, scrollbar removed
+   -------------------------------------------------------------------------- */
+
+.search-results-container {
+  position: absolute;
+  top: 96px;
+  left: 388px;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 24px;
+  padding-bottom: 80px;
+  padding-left: 20px;
+  padding-right: 40px;
+  box-sizing: border-box;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: left 0.50s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.50s cubic-bezier(0.16, 1, 0.3, 1);
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* When on-screen keyboard collapses into left edge, shift tiles back to full width */
+.search-results-container.keyboard-collapsed,
+.search-results-container.expanded-left {
+  left: 0;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+/* Completely remove visible scrollbar from the right and throughout webOS */
+.search-results-container::-webkit-scrollbar,
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+/* Flexbox Wrap Grid centered in the middle */
+.search-results-grid {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 1760px;
+}
+
+/* Individual Movie / TV Show Tile: Pure Cover Poster (No titles/content on tile) */
+.media-tile {
+  width: 220px;
+  height: 330px;
+  margin: 12px;
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  background-color: #18181e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.40);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-transform-origin: center center;
+  transform-origin: center center;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transition: -webkit-transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease;
+}
+
+/* Flawless Poster Focus & Hover: Generous container padding prevents top/edge clipping */
+body.mode-5way .media-tile.focused,
+body.mode-pointer .media-tile:hover {
+  outline: none !important;
+  -webkit-transform: scale(1.08) translateZ(0);
+  transform: scale(1.08) translateZ(0);
+  border-color: rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.75),
+    0 0 0 2.5px rgba(255, 255, 255, 0.75) !important;
+  z-index: 50 !important;
+}
+
+.tile-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 21px;
+}
+
+.tile-poster-placeholder {
+  width: 100%;
+  height: 100%;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e1e24 0%, #121215 100%);
+  color: #8e8e93;
+  padding: 20px;
+  text-align: center;
+}
+
+.placeholder-icon {
+  font-size: 38px;
+  margin-bottom: 8px;
+}
+
+.placeholder-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #a1a1aa;
+}
+
+/* State Messages (Loading, Empty, Error) */
+.results-state-msg {
+  width: 100%;
+  padding: 80px 0;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #8e8e93;
+  font-size: 18px;
+  gap: 16px;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  -webkit-animation: spin 0.8s linear infinite;
+  animation: spin 0.8s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.state-icon {
+  font-size: 42px;
+}
+
+/* --------------------------------------------------------------------------
+   Comprehensive Media Details Modal
+   -------------------------------------------------------------------------- */
+
+.media-details-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.52s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.52s ease;
+}
+
+.media-details-modal.open {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-backdrop-blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center top;
+  -webkit-filter: blur(24px) brightness(0.28);
+  filter: blur(24px) brightness(0.28);
+  -webkit-transform: scale(1.08);
+  transform: scale(1.08);
+  transition: opacity 0.52s ease;
+}
+
+.modal-scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 60% 40%, rgba(12, 12, 14, 0.4) 0%, rgba(12, 12, 14, 0.92) 100%);
+}
+
+.modal-content {
+  position: absolute;
+  top: 80px;
+  left: 120px;
+  right: 120px;
+  bottom: 80px;
+  padding: 48px;
+  border-radius: 28px;
+  z-index: 10;
+  overflow: hidden;
+  /* Slow, smooth cinema modal glide from middle up */
+  -webkit-transform: translate3d(0, 60px, 0) scale(0.96);
+  transform: translate3d(0, 60px, 0) scale(0.96);
+  opacity: 0;
+  transition: -webkit-transform 0.56s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.56s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.media-details-modal.open .modal-content {
+  -webkit-transform: translate3d(0, 0, 0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
+  opacity: 1;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: -webkit-transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s ease;
+}
+
+.modal-body-layout {
+  display: -webkit-flex;
+  display: flex;
+  height: 100%;
+  gap: 48px;
+}
+
+.modal-poster-wrapper {
+  width: 320px;
+  height: 480px;
+  flex-shrink: 0;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+  background: #18181e;
+}
+
+.modal-poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-details-col {
+  -webkit-flex: 1;
+  flex: 1;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-right: 16px;
+}
+
+.modal-title {
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+}
+
+.modal-meta-strip {
+  display: -webkit-flex;
+  display: flex;
+  gap: 12px;
+  margin: 14px 0 20px 0;
+}
+
+.meta-pill {
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e4e4e7;
+}
+
+.meta-pill.rating {
+  color: #ffd60a;
+}
+
+.modal-overview {
+  font-size: 17px;
+  line-height: 1.55;
+  color: #d1d1d6;
+  max-width: 900px;
+  margin-bottom: 28px;
+}
+
+.modal-actions-row {
+  margin-bottom: 28px;
+}
+
+.modal-action-btn {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 18px;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #ffffff;
+  color: #000000;
+  transition: -webkit-transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s ease;
+}
+
+body.mode-5way .modal-action-btn.focused,
+body.mode-pointer .modal-action-btn:hover {
+  -webkit-transform: scale(1.08) translateZ(0);
+  transform: scale(1.08) translateZ(0);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.6), 0 8px 24px rgba(0, 0, 0, 0.5);
+  background: #ffffff;
+  color: #000000;
+}
+
+/* --------------------------------------------------------------------------
+   Sleek Glassmorphic Stream Selection Drawer (Matching Apple TV Aesthetic)
+   -------------------------------------------------------------------------- */
+
+.modal-stream-drawer {
+  margin-top: 18px;
+  margin-bottom: 24px;
+  padding: 24px;
+  border-radius: 20px;
+  background: rgba(18, 18, 22, 0.90);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.stream-drawer-header {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.stream-drawer-title-group {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+}
+
+.stream-drawer-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #8e8e93;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.stream-drawer-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.stream-drawer-close {
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 14px;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s ease;
+}
+
+body.mode-5way .stream-drawer-close.focused,
+body.mode-pointer .stream-drawer-close:hover {
+  -webkit-transform: scale(1.12);
+  transform: scale(1.12);
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.4);
+}
+
+.modal-stream-cards-grid {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 280px;
+  overflow-y: auto;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.modal-stream-cards-grid::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
+.stream-card-btn {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 14px 22px;
+  color: #ffffff;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: -webkit-transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s ease,
+              border-color 0.35s ease,
+              box-shadow 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.mode-5way .stream-card-btn.focused,
+body.mode-pointer .stream-card-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.75);
+  -webkit-transform: scale(1.025) translateZ(0);
+  transform: scale(1.025) translateZ(0);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.35), 0 8px 24px rgba(0, 0, 0, 0.5);
+  outline: none !important;
+}
+
+.stream-card-left {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+}
+
+.stream-card-quality {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  margin-right: 14px;
+}
+
+.stream-card-details {
+  font-size: 14px;
+  color: #e5e5ea;
+  font-weight: 500;
+}
+
+.stream-card-right {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+}
+
+.stream-play-pill {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #000000;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Cast Section */
+.modal-cast-section {
+  margin-top: 14px;
+}
+
+.cast-heading {
+  font-size: 16px;
+  font-weight: 600;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 16px;
+}
+
+.modal-cast-grid {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.actor-card {
+  width: 140px;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.40s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.actor-photo {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  object-fit: cover;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.actor-photo-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.actor-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.actor-character {
+  font-size: 11px;
+  color: #8e8e93;
+  margin-top: 2px;
+  line-height: 1.2;
+}
+
+/* --------------------------------------------------------------------------
+   Fullscreen TV Streaming Video Player Overlay & Controls
+   -------------------------------------------------------------------------- */
+
+.video-player-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  z-index: 500;
+  background: #000000;
+}
+
+.stream-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.player-osd {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 64px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, transparent 22%, transparent 75%, rgba(0,0,0,0.90) 100%);
+  pointer-events: auto;
+  opacity: 1;
+  transition: opacity 0.50s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.player-osd.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.player-top-bar {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+}
+
+.player-title {
+  margin-left: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.player-bottom-bar {
+  width: 100%;
+}
+
+.player-progress-container {
+  width: 100%;
+  height: 28px;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.player-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  position: relative;
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.player-progress-container:hover .player-progress-bar,
+.player-progress-bar:focus {
+  height: 12px;
+}
+
+/* Apple Solid White Timeline with subtle luminous halo */
+.player-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: #ffffff !important;
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.65);
+  position: relative;
+  transition: width 0.25s linear;
+}
+
+.player-scrubber-handle {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  margin-top: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 2px 6px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 0.35s ease,
+              -webkit-transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.player-progress-container:hover .player-scrubber-handle,
+.player-progress-bar:focus .player-scrubber-handle {
+  opacity: 1;
+  -webkit-transform: scale(1.25);
+  transform: scale(1.25);
+}
+
+.player-controls-row {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.player-controls-left,
+.player-controls-right {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+}
+
+/* Clear hover / focus interaction on player buttons */
+.player-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #ffffff;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 18px;
+  transition: -webkit-transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s ease,
+              border-color 0.35s ease,
+              box-shadow 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.mode-5way .player-btn.focused,
+body.mode-pointer .player-btn:hover {
+  background: rgba(255, 255, 255, 0.38) !important;
+  border-color: rgba(255, 255, 255, 0.90) !important;
+  -webkit-transform: scale(1.15) translateZ(0);
+  transform: scale(1.15) translateZ(0);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.5), 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+  outline: none !important;
+}
+
+.player-time-display {
+  font-size: 18px;
+  color: #f5f5f7;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+/* Audio Track Switcher Button */
+.player-audio-btn {
+  width: auto !important;
+  height: 50px !important;
+  border-radius: 25px !important;
+  padding: 0 20px !important;
+  margin-right: 0 !important;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.player-audio-current {
+  letter-spacing: 0.3px;
+}
+
+/* Audio Language Selection Menu */
+.player-audio-menu {
+  position: absolute;
+  bottom: 96px;
+  right: 64px;
+  min-width: 240px;
+  background: rgba(22, 22, 28, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  padding: 14px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  z-index: 30;
+  transition: opacity 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.audio-menu-header {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8e8e93;
+  padding: 6px 12px 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 8px;
+}
+
+.player-audio-list {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.audio-track-item {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.35s ease,
+              -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.audio-track-item.active {
+  background: rgba(255, 255, 255, 0.12);
+  font-weight: 700;
+}
+
+body.mode-5way .audio-track-item.focused,
+body.mode-pointer .audio-track-item:hover {
+  background: rgba(255, 255, 255, 0.28);
+  -webkit-transform: scale(1.03) translateZ(0);
+  transform: scale(1.03) translateZ(0);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.35);
+  outline: none !important;
+}
+
+.audio-track-check {
+  color: #30d158;
+  font-weight: 800;
+  font-size: 16px;
+  margin-left: 10px;
+}

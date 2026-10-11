@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080, user-scalable=no">
+  <title>Streaming Service</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/player.css">
+</head>
+<body class="mode-pointer">
+  <div id="app">
+
+    <!-- Top-Left Universal Glassmorphic Navbar (Collapsed by Default) -->
+    <nav id="universal-nav" class="universal-nav collapsed" aria-label="Main Navigation">
+      <!-- 3-Line Hamburger Menu Toggle Button (Visible ONLY when collapsed) -->
+      <button id="menu-toggle-btn" class="nav-toggle-btn focusable" aria-label="Toggle navigation menu" title="Menu" tabindex="0">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+
+      <!-- Nav Items with Sliding Indicator (Visible ONLY when uncollapsed) -->
+      <div id="nav-items-wrapper" class="nav-items-wrapper">
+        <div id="nav-slider" class="nav-slider"></div>
+
+        <!-- Home (Inactive) -->
+        <button id="nav-btn-home" class="nav-btn inactive" data-target="home" disabled tabindex="-1">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span class="nav-label">Home</span>
+        </button>
+
+        <!-- Search (ACTIVE Page) -->
+        <button id="nav-btn-search" class="nav-btn active focusable" data-target="search" tabindex="0">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <span class="nav-label">Search</span>
+        </button>
+
+        <!-- Settings (Inactive) -->
+        <button id="nav-btn-settings" class="nav-btn inactive" data-target="settings" disabled tabindex="-1">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span class="nav-label">Settings</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Middle-Top Search Bar (Vertically In Line with Menu Button & Substantially Bigger) -->
+    <header class="middle-top-search">
+      <div class="search-input-box glass-panel focusable" tabindex="0">
+        <svg class="search-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="text"
+          id="search-input"
+          class="search-input-field"
+          placeholder="Search movies, TV shows, actors..."
+          autocomplete="off"
+          readonly
+          tabindex="-1"
+        >
+      </div>
+    </header>
+
+    <!-- Left-Side Alphabet Keyboard (4 letters per row, bigger tiles, space & backspace in middle) -->
+    <!-- On-Screen Keyboard (5 Letters Per Row, Auto-Collapsing Glassmorphic Tiles) -->
+    <div id="onscreen-keyboard" class="onscreen-keyboard" aria-label="On-Screen Keyboard">
+      <!-- Row 1: A B C D E -->
+      <div class="kb-row">
+        <button class="kb-tile focusable" data-char="A" tabindex="0">A</button>
+        <button class="kb-tile focusable" data-char="B" tabindex="0">B</button>
+        <button class="kb-tile focusable" data-char="C" tabindex="0">C</button>
+        <button class="kb-tile focusable" data-char="D" tabindex="0">D</button>
+        <button class="kb-tile focusable" data-char="E" tabindex="0">E</button>
+      </div>
+
+      <!-- Row 2: F G H I J -->
+      <div class="kb-row">
+        <button class="kb-tile focusable" data-char="F" tabindex="0">F</button>
+        <button class="kb-tile focusable" data-char="G" tabindex="0">G</button>
+        <button class="kb-tile focusable" data-char="H" tabindex="0">H</button>
+        <button class="kb-tile focusable" data-char="I" tabindex="0">I</button>
+        <button class="kb-tile focusable" data-char="J" tabindex="0">J</button>
+      </div>
+
+      <!-- Row 3: K L M N O -->
+      <div class="kb-row">
+        <button class="kb-tile focusable" data-char="K" tabindex="0">K</button>
+        <button class="kb-tile focusable" data-char="L" tabindex="0">L</button>
+        <button class="kb-tile focusable" data-char="M" tabindex="0">M</button>
+        <button class="kb-tile focusable" data-char="N" tabindex="0">N</button>
+        <button class="kb-tile focusable" data-char="O" tabindex="0">O</button>
+      </div>
+
+      <!-- Row 4: P Q R S T -->
+      <div class="kb-row">
+        <button class="kb-tile focusable" data-char="P" tabindex="0">P</button>
+        <button class="kb-tile focusable" data-char="Q" tabindex="0">Q</button>
+        <button class="kb-tile focusable" data-char="R" tabindex="0">R</button>
+        <button class="kb-tile focusable" data-char="S" tabindex="0">S</button>
+        <button class="kb-tile focusable" data-char="T" tabindex="0">T</button>
+      </div>
+
+      <!-- Row 5: U V W X Y -->
+      <div class="kb-row">
+        <button class="kb-tile focusable" data-char="U" tabindex="0">U</button>
+        <button class="kb-tile focusable" data-char="V" tabindex="0">V</button>
+        <button class="kb-tile focusable" data-char="W" tabindex="0">W</button>
+        <button class="kb-tile focusable" data-char="X" tabindex="0">X</button>
+        <button class="kb-tile focusable" data-char="Y" tabindex="0">Y</button>
+      </div>
+
+      <!-- Row 6: Z, Space, Delete (Exact Width Match) -->
+      <div class="kb-row">
+        <button class="kb-tile focusable" data-char="Z" tabindex="0">Z</button>
+        <button id="kb-btn-space" class="kb-tile kb-tile-action focusable" data-action="space" tabindex="0">
+          <span>Space</span>
+        </button>
+        <button id="kb-btn-delete" class="kb-tile kb-tile-action focusable" data-action="delete" tabindex="0" title="Delete">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px;">
+            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
+            <line x1="18" y1="9" x2="12" y2="15"/>
+            <line x1="12" y1="9" x2="18" y2="15"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Dynamic Media Search Tiles Container -->
+    <main id="search-results-container" class="search-results-container" aria-label="Search Results">
+      <div id="search-results-grid" class="search-results-grid">
+        <!-- Rendered dynamically from TMDB & TVDB -->
+      </div>
+    </main>
+
+    <!-- Comprehensive Media Details Modal Overlay (Backdrop, Posters, Cast & Metadata) -->
+    <div id="media-details-modal" class="media-details-modal" aria-hidden="true" role="dialog">
+      <div class="modal-backdrop-blur" id="modal-backdrop-img"></div>
+      <div class="modal-scrim"></div>
+      <div class="modal-content glass-panel">
+        <button id="modal-close-btn" class="modal-close-btn focusable" tabindex="0" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width: 20px; height: 20px;">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+
+        <div class="modal-body-layout">
+          <!-- Poster -->
+          <div class="modal-poster-wrapper">
+            <img id="modal-poster-img" class="modal-poster-img" src="" alt="Poster">
+          </div>
+
+          <!-- Metadata & Overview -->
+          <div class="modal-details-col">
+            <h2 id="modal-title" class="modal-title"></h2>
+            <div id="modal-meta-strip" class="modal-meta-strip"></div>
+            <p id="modal-overview" class="modal-overview"></p>
+
+            <div class="modal-actions-row">
+              <button id="modal-play-btn" class="modal-action-btn primary focusable" tabindex="0">
+                <svg id="modal-play-icon" viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span id="modal-play-text">Play Now</span>
+              </button>
+            </div>
+
+            <!-- Sleek Glassmorphic Stream Selection Drawer -->
+            <div id="modal-stream-selector" class="modal-stream-drawer glass-panel" style="display: none;">
+              <div class="stream-drawer-header">
+                <div class="stream-drawer-title-group">
+                  <span class="stream-drawer-eyebrow">AIOSTREAMS</span>
+                  <h4 class="stream-drawer-title">Choose Stream Quality</h4>
+                </div>
+                <button id="modal-stream-close-btn" class="stream-drawer-close focusable" tabindex="0" aria-label="Close Streams">✕</button>
+              </div>
+              <div id="modal-stream-list" class="modal-stream-cards-grid"></div>
+            </div>
+
+            <!-- Cast & Actor Information -->
+            <div class="modal-cast-section">
+              <h3 class="cast-heading">Featured Cast</h3>
+              <div id="modal-cast-grid" class="modal-cast-grid">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fullscreen TV Streaming Video Player Overlay -->
+    <div id="video-player-container" class="video-player-container" style="display: none;">
+      <video id="stream-video" class="stream-video" playsinline></video>
+      <div id="player-osd" class="player-osd">
+        <div class="player-top-bar">
+          <button id="player-back-btn" class="player-btn focusable" tabindex="0" title="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 24px; height: 24px;">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <div id="player-title" class="player-title">Now Playing</div>
+        </div>
+        <div class="player-bottom-bar">
+          <div class="player-progress-container" id="player-progress-container">
+            <div id="player-progress-bar" class="player-progress-bar focusable" tabindex="0">
+              <div id="player-progress-fill" class="player-progress-fill">
+                <div class="player-scrubber-handle"></div>
+              </div>
+            </div>
+          </div>
+          <div class="player-controls-row">
+            <div class="player-controls-left">
+              <button id="player-play-btn" class="player-btn focusable" tabindex="0">
+                <svg id="player-play-icon" viewBox="0 0 24 24" fill="currentColor" style="width: 28px; height: 28px;">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+              </button>
+              <span id="player-time-display" class="player-time-display">0:00 / 0:00</span>
+            </div>
+            <div class="player-controls-right">
+              <button id="player-audio-btn" class="player-btn player-audio-btn focusable" tabindex="0" title="Audio Language" aria-label="Audio Language">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width: 20px; height: 20px; margin-right: 8px;">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                  <line x1="12" y1="19" x2="12" y2="23"/>
+                  <line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
+                <span id="player-audio-current" class="player-audio-current">Audio: EN</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Audio Track Switcher Menu -->
+        <div id="player-audio-menu" class="player-audio-menu glass-panel" style="display: none;">
+          <div class="audio-menu-header">Audio Language</div>
+          <div id="player-audio-list" class="player-audio-list"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- webOS Scripts -->
+  <script src="js/magic-remote.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

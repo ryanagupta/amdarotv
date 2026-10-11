@@ -1,0 +1,15 @@
+{
+  "name": "Amdaro TV",
+  "version": "1.0.0",
+  "headline": "Amdaro TV",
+  "action": "link:https://ryanagupta.github.io/amdarotv/index.html",
+  "menu": [
+    {
+      "icon": "play-circle-filled",
+      "label": "Launch Amdaro TV",
+      "action": "link:https://ryanagupta.github.io/amdarotv/index.html",
+      "focus": true,
+      "execute": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "com.stream.tv",
+  "version": "1.0.0",
+  "vendor": "StreamingService",
+  "type": "web",
+  "main": "index.html",
+  "title": "Streaming Service",
+  "icon": "assets/icon.png",
+  "largeIcon": "assets/largeIcon.png",
+  "resolution": "1920x1080"
+}

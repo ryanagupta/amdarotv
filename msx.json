@@ -1,0 +1,10 @@
+{
+  "name": "Amdaro TV",
+  "version": "1.0.0",
+  "parameter": "menu:{PREFIX}{SERVER}/msx/menu.json",
+  "welcome": "none",
+  "launcher": {
+    "icon": "play-circle-outline",
+    "color": "msx-black-soft"
+  }
+}
