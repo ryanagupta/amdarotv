@@ -448,7 +448,7 @@ body.mode-pointer .focusable:hover {
   height: 50px;
   background: #272729;
   border-radius: 9999px;
-  border: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   outline: none !important;
   box-shadow: none !important;
   display: -webkit-flex;
