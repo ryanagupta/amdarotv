@@ -16,6 +16,24 @@ var OnScreenKeyboard = (function () {
     keyboardElement = document.getElementById('onscreen-keyboard');
     searchInput = document.getElementById('search-input');
 
+    // Mode switchers: [ abc | 123 ]
+    var modeAbc = document.getElementById('kb-mode-abc');
+    var mode123 = document.getElementById('kb-mode-123');
+
+    if (modeAbc) {
+      modeAbc.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setMode('abc');
+      });
+    }
+
+    if (mode123) {
+      mode123.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setMode('123');
+      });
+    }
+
     if (!keyboardElement || !searchInput) return;
 
     // Attach click listeners to all character keys (.kb-key[data-char])
@@ -59,24 +77,6 @@ var OnScreenKeyboard = (function () {
       });
     }
 
-    // Mode switchers: [ abc | 123 ]
-    var modeAbc = document.getElementById('kb-mode-abc');
-    var mode123 = document.getElementById('kb-mode-123');
-
-    if (modeAbc) {
-      modeAbc.addEventListener('click', function (e) {
-        e.stopPropagation();
-        setMode('abc');
-      });
-    }
-
-    if (mode123) {
-      mode123.addEventListener('click', function (e) {
-        e.stopPropagation();
-        setMode('123');
-      });
-    }
-
     console.log('[Keyboard] Apple TV+ 6-column keyboard initialized.');
   }
 
@@ -88,13 +88,25 @@ var OnScreenKeyboard = (function () {
     var grid123 = document.getElementById('kb-grid-123');
 
     if (mode === '123') {
-      if (modeAbc) modeAbc.classList.remove('active');
-      if (mode123) mode123.classList.add('active');
+      if (modeAbc) {
+        modeAbc.classList.remove('active');
+        modeAbc.setAttribute('aria-selected', 'false');
+      }
+      if (mode123) {
+        mode123.classList.add('active');
+        mode123.setAttribute('aria-selected', 'true');
+      }
       if (gridAbc) gridAbc.style.display = 'none';
       if (grid123) grid123.style.display = 'flex';
     } else {
-      if (mode123) mode123.classList.remove('active');
-      if (modeAbc) modeAbc.classList.add('active');
+      if (mode123) {
+        mode123.classList.remove('active');
+        mode123.setAttribute('aria-selected', 'false');
+      }
+      if (modeAbc) {
+        modeAbc.classList.add('active');
+        modeAbc.setAttribute('aria-selected', 'true');
+      }
       if (grid123) grid123.style.display = 'none';
       if (gridAbc) gridAbc.style.display = 'flex';
     }
