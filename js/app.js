@@ -4,6 +4,12 @@
  */
 
 window.addEventListener('load', function () {
+  // Ensure universal loading screen is initialized and hidden
+  if (window.AppLoader) {
+    AppLoader.init();
+    AppLoader.hide();
+  }
+
   // Initialize native Magic Remote & Conventional Remote controller
   MagicRemote.init();
 

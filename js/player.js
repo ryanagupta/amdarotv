@@ -843,6 +843,7 @@ var StreamPlayer = (function () {
     load: load,
     play: play,
     pause: pause,
+    stop: closePlayer,
     togglePlay: togglePlay,
     seek: seek,
     close: closePlayer,
