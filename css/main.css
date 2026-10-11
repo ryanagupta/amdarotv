@@ -323,8 +323,8 @@ body.mode-pointer .focusable:hover {
 .top-nav-bar,
 .search-top-bar {
   position: fixed;
-  top: 48px;
-  left: 48px;
+  top: 24px;
+  left: 28px;
   z-index: 120;
 }
 
@@ -338,12 +338,8 @@ body.mode-pointer .focusable:hover {
   border: none;
   padding: 0;
   margin: 0;
-  cursor: pointer;
+  cursor: default;
   outline: none;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  transition: -webkit-transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .top-nav-chevron {
@@ -352,11 +348,6 @@ body.mode-pointer .focusable:hover {
   color: #D1D1D6;
   flex-shrink: 0;
   display: block;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  transition: color 0.20s ease,
-              -webkit-transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .top-nav-capsule {
@@ -372,13 +363,6 @@ body.mode-pointer .focusable:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.30);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  transition: background 0.25s ease,
-              border-color 0.25s ease,
-              box-shadow 0.25s ease,
-              -webkit-transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .top-nav-icon-circle {
@@ -394,7 +378,6 @@ body.mode-pointer .focusable:hover {
   -webkit-justify-content: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background 0.25s ease;
 }
 
 .top-nav-search-icon {
@@ -402,7 +385,6 @@ body.mode-pointer .focusable:hover {
   height: 17px;
   stroke: #FFFFFF;
   flex-shrink: 0;
-  transition: stroke 0.25s ease;
 }
 
 .top-nav-label {
@@ -414,49 +396,6 @@ body.mode-pointer .focusable:hover {
   margin-left: 9px;
   line-height: 1;
   white-space: nowrap;
-  transition: color 0.25s ease;
-}
-
-/* Hover & Remote 5-Way Focus States */
-.top-nav-pill-btn:focus .top-nav-capsule,
-.top-nav-pill-btn.focused .top-nav-capsule,
-body.mode-5way .top-nav-pill-btn.focused .top-nav-capsule,
-body.mode-pointer .top-nav-pill-btn:hover .top-nav-capsule {
-  background: #FFFFFF !important;
-  border-color: #FFFFFF !important;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.50) !important;
-  -webkit-transform: scale(1.05) translateZ(0);
-  transform: scale(1.05) translateZ(0);
-}
-
-.top-nav-pill-btn:focus .top-nav-label,
-.top-nav-pill-btn.focused .top-nav-label,
-body.mode-5way .top-nav-pill-btn.focused .top-nav-label,
-body.mode-pointer .top-nav-pill-btn:hover .top-nav-label {
-  color: #000000 !important;
-}
-
-.top-nav-pill-btn:focus .top-nav-icon-circle,
-.top-nav-pill-btn.focused .top-nav-icon-circle,
-body.mode-5way .top-nav-pill-btn.focused .top-nav-icon-circle,
-body.mode-pointer .top-nav-pill-btn:hover .top-nav-icon-circle {
-  background: #E5E5EA !important;
-}
-
-.top-nav-pill-btn:focus .top-nav-search-icon,
-.top-nav-pill-btn.focused .top-nav-search-icon,
-body.mode-5way .top-nav-pill-btn.focused .top-nav-search-icon,
-body.mode-pointer .top-nav-pill-btn:hover .top-nav-search-icon {
-  stroke: #000000 !important;
-}
-
-.top-nav-pill-btn:focus .top-nav-chevron,
-.top-nav-pill-btn.focused .top-nav-chevron,
-body.mode-5way .top-nav-pill-btn.focused .top-nav-chevron,
-body.mode-pointer .top-nav-pill-btn:hover .top-nav-chevron {
-  color: #FFFFFF !important;
-  -webkit-transform: translateX(-3px);
-  transform: translateX(-3px);
 }
 
 /* --------------------------------------------------------------------------
