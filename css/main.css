@@ -323,8 +323,8 @@ body.mode-pointer .focusable:hover {
 .top-nav-bar,
 .search-top-bar {
   position: fixed;
-  top: 24px;
-  left: 28px;
+  top: 36px;
+  left: 40px;
   z-index: 120;
 }
 
