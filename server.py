@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Amdaro TV - Dedicated Media Station X (MSX) HTTP Server
-Runs a local web server with full CORS headers and auto-detects your LAN IP address.
+Runs a local web server with full CORS headers, auto-detects LAN IP,
+and dynamically substitutes {PREFIX} and {SERVER} in all JSON files.
 """
 
 import sys
@@ -14,7 +15,6 @@ PORT = 8080
 def get_lan_ip():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # Doesn't need to be reachable, just gets primary route IP
         s.connect(('8.8.8.8', 80))
         ip = s.getsockname()[0]
         s.close()
@@ -34,12 +34,34 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
         self.send_response(200, "OK")
         self.end_headers()
 
-    def log_message(self, format, *args):
-        # Clean logging
-        sys.stderr.write("[MSX Server] %s - - [%s] %s\n" %
-                         (self.address_string(),
-                          self.log_date_time_string(),
-                          format%args))
+    def do_GET(self):
+        # Serve dynamic JSON with resolved tokens
+        clean_path = self.path.split('?')[0].lstrip('/')
+        if not clean_path:
+            clean_path = 'index.html'
+
+        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), clean_path)
+
+        if os.path.isfile(file_path) and clean_path.endswith('.json'):
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+
+                host_header = self.headers.get('Host', f"{get_lan_ip()}:{PORT}")
+                content = content.replace('{PREFIX}', 'http://').replace('{SERVER}', host_header)
+
+                body = content.encode('utf-8')
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
+            except Exception as e:
+                self.send_error(500, str(e))
+                return
+
+        return super().do_GET()
 
 def run():
     ip = get_lan_ip()

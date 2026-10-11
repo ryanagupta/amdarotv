@@ -1,6 +1,7 @@
 /**
  * Amdaro TV - Dedicated Media Station X (MSX) HTTP Server for Node.js
- * Runs a zero-dependency local web server with full CORS headers and auto-detects your LAN IP address.
+ * Runs a zero-dependency local web server with full CORS headers, auto-detects LAN IP,
+ * and dynamically substitutes {PREFIX} and {SERVER} in all JSON files.
  */
 
 const http = require('http');
@@ -69,6 +70,27 @@ const server = http.createServer((req, res) => {
 
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+
+    if (ext === '.json') {
+      fs.readFile(filePath, 'utf8', (readErr, data) => {
+        if (readErr) {
+          res.writeHead(500, { 'Content-Type': 'text/plain' });
+          res.end('Server Error reading file');
+          return;
+        }
+
+        const hostHeader = req.headers['host'] || `${getLanIp()}:${PORT}`;
+        const resolved = data.replace(/\{PREFIX\}/g, 'http://').replace(/\{SERVER\}/g, hostHeader);
+        const buf = Buffer.from(resolved, 'utf8');
+
+        res.writeHead(200, {
+          'Content-Type': contentType,
+          'Content-Length': buf.length
+        });
+        res.end(buf);
+      });
+      return;
+    }
 
     res.writeHead(200, {
       'Content-Type': contentType,
