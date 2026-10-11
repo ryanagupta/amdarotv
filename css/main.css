@@ -442,11 +442,11 @@ body.mode-pointer .focusable:hover {
 
 .keyboard-source-switcher {
   position: fixed;
-  top: 216px;
+  top: 212px;
   left: 70px;
-  width: 300px;
-  height: 40px;
-  background: #1C1B1E;
+  width: 285px;
+  height: 34px;
+  background: #2C2C2E;
   border-radius: 9999px;
   border: none !important;
   outline: none !important;
@@ -455,7 +455,7 @@ body.mode-pointer .focusable:hover {
   display: flex;
   -webkit-align-items: center;
   align-items: center;
-  padding: 3px;
+  padding: 4px;
   gap: 0;
   margin: 0;
   overflow: hidden;
@@ -474,7 +474,7 @@ body.mode-pointer .focusable:hover {
   background: transparent;
   color: #8E8E93;
   font-family: 'San Francisco Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.2px;
   display: -webkit-flex;
