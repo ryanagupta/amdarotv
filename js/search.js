@@ -181,12 +181,12 @@ var MediaSearch = (function () {
     if (suggestionsBar) {
       suggestionsBar.style.display = 'flex';
       if (sugg1Text) sugg1Text.textContent = q;
-      if (sugg2Text) sugg2Text.textContent = 'movies from ' + q;
+      if (sugg2Text) sugg2Text.textContent = 'movies from the leading...';
     }
 
     // Show category tabs
     if (categoryTabs) {
-      categoryTabs.style.display = 'block';
+      categoryTabs.style.display = 'flex';
     }
 
     // Hide browse, show results

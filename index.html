@@ -10,6 +10,29 @@
 <body class="mode-pointer">
   <div id="app">
 
+    <!-- Universal Apple TV Contextual Loading Screen (1:1 with Reference Image) -->
+    <div id="app-loading-screen" class="apple-loading-screen theme-grey active" aria-live="polite">
+      <div id="app-loading-spinner-box" class="apple-spinner-container">
+        <svg class="apple-spinner" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+          <g class="apple-spinner-blades">
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="1.00" transform="rotate(0 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.91" transform="rotate(30 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.82" transform="rotate(60 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.73" transform="rotate(90 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.64" transform="rotate(120 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.55" transform="rotate(150 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.46" transform="rotate(180 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.37" transform="rotate(210 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.28" transform="rotate(240 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.20" transform="rotate(270 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.14" transform="rotate(300 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.08" transform="rotate(330 32 32)"/>
+          </g>
+        </svg>
+      </div>
+      <div id="app-loading-caption" class="apple-loading-caption" style="display: none;"></div>
+    </div>
+
     <!-- Top-Left Universal Glassmorphic Navbar (Collapsed by Default) -->
     <nav id="universal-nav" class="universal-nav collapsed" aria-label="Main Navigation">
       <!-- 3-Line Hamburger Menu Toggle Button (Visible ONLY when collapsed) -->
@@ -52,55 +75,15 @@
       </div>
     </nav>
 
-    <!-- Apple TV+ Top Left Back / Search Pill (Images 1-5) -->
-    <div class="search-top-bar">
-      <button id="search-top-pill" class="search-top-pill focusable" tabindex="0" title="Search">
-        <span class="search-top-chevron">&lsaquo;</span>
-        <svg class="search-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <span class="search-top-label">Search</span>
-      </button>
-    </div>
-
-    <!-- Apple TV+ Large Search Header & Suggestion Area -->
+    <!-- Apple TV+ Large Search Header -->
     <header class="apple-search-header">
-      <!-- Main Search Query Display -->
       <div class="apple-search-input-line">
-        <svg class="apple-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <svg class="apple-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6">
           <circle cx="11" cy="11" r="8"/>
           <line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
         <span id="search-query-display" class="apple-search-text empty">Movies, Shows, Cast, and More</span>
         <input type="text" id="search-input" class="search-hidden-input" autocomplete="off" readonly tabindex="-1">
-      </div>
-
-      <!-- Search Suggestions Bar (Images 2, 3, 4) -->
-      <div id="search-suggestions-bar" class="search-suggestions-bar" style="display: none;">
-        <button id="sugg-pill-1" class="sugg-pill focusable" tabindex="0">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sugg-icon">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          <span id="sugg-text-1">interstellar</span>
-        </button>
-        <button id="sugg-pill-2" class="sugg-pill focusable" tabindex="0">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sugg-icon">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          <span id="sugg-text-2">movies from the leading...</span>
-        </button>
-      </div>
-
-      <!-- Category Filter Tabs: [Top Results] [Movies] (Images 2, 3, 4) -->
-      <div id="search-category-tabs" class="search-category-tabs" style="display: none;">
-        <div class="category-tabs-group">
-          <button id="tab-top-results" class="category-tab-pill active focusable" data-tab="top" tabindex="0">Top Results</button>
-          <button id="tab-movies" class="category-tab-pill focusable" data-tab="movies" tabindex="0">Movies</button>
-        </div>
-        <div class="category-tabs-divider"></div>
       </div>
     </header>
 
@@ -158,11 +141,9 @@
         <!-- Row 6: SPACE [⌫] CLEAR -->
         <div class="kb-row kb-action-row">
           <button id="kb-btn-space" class="kb-key kb-key-action kb-key-space focusable" data-action="space" tabindex="0">SPACE</button>
-          <button id="kb-btn-delete" class="kb-key kb-key-action kb-key-backspace focusable" data-action="delete" tabindex="0" title="Backspace">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="kb-backspace-svg">
-              <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
-              <line x1="18" y1="9" x2="12" y2="15"/>
-              <line x1="12" y1="9" x2="18" y2="15"/>
+          <button id="kb-btn-delete" class="kb-key kb-key-action kb-key-backspace focusable" data-action="delete" tabindex="0" title="Backspace" aria-label="Backspace">
+            <svg viewBox="0 0 256 256" width="22" height="22" fill="currentColor">
+              <path d="M216,48H88a16,16,0,0,0-12.8,6.4L16,128l59.2,73.6A16,16,0,0,0,88,208H216a16,16,0,0,0,16-16V64A16,16,0,0,0,216,48Zm0,144H88L36.8,128,88,64H216Zm-36.7-77.7L164.7,128l14.6,14.3a8,8,0,0,1-11.4,11.4L153.3,139.3,138.7,153.7a8,8,0,0,1-11.4-11.4L141.9,128l-14.6-14.3a8,8,0,0,1,11.4-11.4l14.6,14.4,14.6-14.4a8,8,0,0,1,11.4,11.4Z"/>
             </svg>
           </button>
           <button id="kb-btn-clear" class="kb-key kb-key-action kb-key-clear focusable" data-action="clear" tabindex="0">CLEAR</button>
@@ -209,11 +190,9 @@
         </div>
         <div class="kb-row kb-action-row">
           <button class="kb-key kb-key-action kb-key-space focusable" data-action="space" tabindex="0">SPACE</button>
-          <button class="kb-key kb-key-action kb-key-backspace focusable" data-action="delete" tabindex="0" title="Backspace">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="kb-backspace-svg">
-              <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
-              <line x1="18" y1="9" x2="12" y2="15"/>
-              <line x1="12" y1="9" x2="18" y2="15"/>
+          <button class="kb-key kb-key-action kb-key-backspace focusable" data-action="delete" tabindex="0" title="Backspace" aria-label="Backspace">
+            <svg viewBox="0 0 256 256" width="22" height="22" fill="currentColor">
+              <path d="M216,48H88a16,16,0,0,0-12.8,6.4L16,128l59.2,73.6A16,16,0,0,0,88,208H216a16,16,0,0,0,16-16V64A16,16,0,0,0,216,48Zm0,144H88L36.8,128,88,64H216Zm-36.7-77.7L164.7,128l14.6,14.3a8,8,0,0,1-11.4,11.4L153.3,139.3,138.7,153.7a8,8,0,0,1-11.4-11.4L141.9,128l-14.6-14.3a8,8,0,0,1,11.4-11.4l14.6,14.4,14.6-14.4a8,8,0,0,1,11.4,11.4Z"/>
             </svg>
           </button>
           <button class="kb-key kb-key-action kb-key-clear focusable" data-action="clear" tabindex="0">CLEAR</button>
@@ -223,24 +202,52 @@
 
     <!-- Apple TV+ Search Content / Browse / Results Area -->
     <main id="search-results-container" class="search-results-container" aria-label="Search Results">
-      <!-- Browse Section (Empty Query State, Image 1) -->
+      
+      <!-- Search Suggestions Bar (Sits in right column above results, Reference Image 2) -->
+      <div id="search-suggestions-bar" class="search-suggestions-bar" style="display: none;">
+        <button id="sugg-pill-1" class="sugg-pill focusable" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sugg-icon">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <span id="sugg-text-1"></span>
+        </button>
+        <button id="sugg-pill-2" class="sugg-pill focusable" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sugg-icon">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <span id="sugg-text-2"></span>
+        </button>
+      </div>
+
+      <!-- Category Filter Tabs: [Top Results] [Movies] (Reference Image 2, 3) -->
+      <div id="search-category-tabs" class="search-category-tabs" style="display: none;">
+        <div class="category-tabs-group">
+          <button id="tab-top-results" class="category-tab-pill active focusable" data-tab="top" tabindex="0">Top Results</button>
+          <button id="tab-movies" class="category-tab-pill focusable" data-tab="movies" tabindex="0">Movies</button>
+        </div>
+        <div class="category-tabs-divider"></div>
+      </div>
+
+      <!-- Browse Section (Empty Query State, 1:1 with Reference Image 1) -->
       <section id="search-browse-section" class="search-browse-section">
         <div class="browse-header-row">
           <h2 class="browse-title">Browse</h2>
           <div class="browse-divider-line"></div>
         </div>
         <div id="search-browse-grid" class="search-browse-grid">
-          <!-- Dynamically populated with Ted Lasso, MLS, 4K HDR, Action, Comedy, etc. -->
+          <!-- Dynamically populated with Ted Lasso, MLS, 4K HDR, Action, Comedy... -->
         </div>
       </section>
 
-      <!-- Active Search Results Section (Images 2, 3, 4, 5) -->
+      <!-- Active Search Results Section -->
       <section id="search-results-section" class="search-results-section" style="display: none;">
         <div id="search-results-grid" class="search-results-grid mode-wide">
           <!-- Dynamically populated with Wide Cards or Poster Cards -->
         </div>
 
-        <!-- 7-Card Apple TV+ Loading Skeleton Row (Image 5) -->
+        <!-- 7-Card Apple TV+ Loading Skeleton Row -->
         <div id="search-skeleton-loader" class="search-skeleton-loader" style="display: none;">
           <div class="skeleton-card"></div>
           <div class="skeleton-card"></div>
@@ -263,58 +270,55 @@
         <span>Press Up for Playback Controls</span>
       </div>
 
-      <!-- Close Button (Top right, accessible via remote or pointer) -->
-      <button id="modal-close-btn" class="modal-close-btn focusable" tabindex="0" aria-label="Close modal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width: 20px; height: 20px;">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
+    <!-- 1:1 Apple TV+ Media Details Modal -->
+    <div id="media-details-modal" class="media-details-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <!-- Top Navigation Hint -->
+      <div id="modal-top-hint" class="modal-top-hint">
+        <svg class="hint-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="18 15 12 9 6 15"/>
         </svg>
-      </button>
+        <span>Press Up for Playback Controls</span>
+      </div>
 
-      <!-- Carousel Stage Wrapper (Contains Left Peek, Hero Card, Right Peek) -->
-      <div id="modal-carousel-stage" class="modal-carousel-stage stage-1-card">
-        
-        <!-- Left Peek Card (Previous title in search results) -->
-        <div id="modal-peek-left" class="modal-peek-card peek-left" aria-hidden="true">
-          <img id="peek-left-img" class="peek-img" src="" alt="">
-        </div>
-
-        <!-- Main Hero Card -->
+      <!-- Carousel Stage Wrapper -->
+      <div id="modal-carousel-stage" class="modal-carousel-stage stage-3-fullscreen">
+        <!-- Main Hero Card (Fullscreen edge-to-edge) -->
         <div id="modal-hero-card" class="modal-hero-card">
-          <!-- High-Res Background Backdrop / Video Container -->
+          <!-- Background Backdrop -->
           <div id="modal-hero-bg" class="modal-hero-bg">
             <img id="modal-hero-bg-img" class="modal-hero-bg-img" src="" alt="">
             <div class="modal-hero-gradient-overlay"></div>
           </div>
 
-          <!-- Metadata & Info Overlay (Fades in at Stage 2) -->
+          <!-- Metadata & Info Overlay -->
           <div id="modal-hero-content" class="modal-hero-content">
-            <!-- Top Tag Pill -->
-            <div class="hero-top-tag-wrapper">
-              <span id="modal-tag-pill" class="modal-tag-pill">All Episodes Now Available</span>
+            <!-- Official Movie Logo (Clearart) or Fallback Text Title -->
+            <div class="modal-title-wrapper">
+              <img id="modal-title-logo" class="modal-title-logo" src="" alt="" style="display: none;">
+              <h1 id="modal-title" class="modal-display-title">SPIDER-MAN: BRAND NEW DAY</h1>
             </div>
 
-            <!-- Big Display Title (SF Pro Rounded Heavy) -->
-            <h1 id="modal-title" class="modal-display-title">TED LASSO</h1>
-
-            <!-- Metadata Line 1: Apple TV Icon + Type/Genres + Age Certification -->
+            <!-- Metadata Line 1: Bag/Store Icon + Genres + BBFC Rating Badge -->
             <div class="modal-meta-line-1">
-              <span class="apple-tv-badge">
-                <svg class="apple-tv-svg" viewBox="0 0 170 170" fill="currentColor">
-                  <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.05-7.68-7.85-11.93-14.39-7.05-10.85-12.24-22.75-15.57-35.7-3.33-12.96-5-24.96-5-36.03 0-14.86 3.65-27.4 10.96-37.62 7.3-10.22 17.06-15.46 29.28-15.74 5.37 0 11.39 1.45 18.06 4.35 6.67 2.9 11.25 4.39 13.74 4.47 2.11 0 6.84-1.57 14.18-4.7 7.35-3.13 13.43-4.54 18.26-4.23 13.67.6 24.32 5.56 31.95 14.89-12.19 7.39-18.17 17.53-17.94 30.41.22 10.27 4.28 18.9 12.17 25.88 7.89 6.99 17.24 11.14 28.05 12.47-2.34 7.07-5.2 14.07-8.58 21.01zM119.22 31.91c0-7.39 2.68-14.54 8.04-21.46 5.36-6.91 12.01-11.13 19.95-12.65.23 1.1.34 2.19.34 3.27 0 7.39-2.73 14.5-8.19 21.34-5.46 6.84-12.23 11-20.31 12.49-.07-.98-.1-1.98-.1-2.99z"/>
+              <span class="apple-store-badge">
+                <svg class="apple-store-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
-                <span class="apple-tv-label">tv</span>
               </span>
-              <span id="modal-category-text" class="meta-category-text">TV Show • Comedy • Sport</span>
-              <span id="modal-age-badge" class="meta-age-circle">15</span>
+              <span id="modal-category-text" class="meta-category-text">Movie • Action • Sci-Fi</span>
+              <img id="modal-age-badge-img" class="meta-age-badge-img" src="assets/12.png" alt="12">
+              <span id="modal-age-badge" class="meta-age-circle" style="display: none;">12</span>
             </div>
 
             <!-- Overview Text -->
             <p id="modal-overview" class="modal-overview-text"></p>
 
-            <!-- Metadata Line 2: Air Date / Runtime + Tech Badges -->
+            <!-- Metadata Line 2: Year · Runtime · Rotten Tomatoes · Spec Badges -->
             <div class="modal-meta-line-2">
-              <span id="modal-date-runtime" class="meta-date-runtime">Aug 14, 2020 • 30 mins</span>
+              <span id="modal-date-runtime" class="meta-date-runtime">2026 • 2 hrs 25 mins</span>
+              <span class="meta-tomato-badge">🍅 90%</span>
               <div class="tech-badges-group">
                 <span class="tech-badge tech-badge-pill">4K</span>
                 <img src="icons/badge_dolbyvision.svg" class="tech-badge-svg" alt="Dolby Vision">
@@ -327,109 +331,90 @@
 
             <!-- Buttons Row -->
             <div class="modal-buttons-row">
-              <!-- Main Action Button -->
               <button id="modal-play-btn" class="apple-primary-btn focusable" tabindex="0">
-                <span id="modal-play-btn-text">Accept 3 Months Free</span>
+                <span id="modal-play-btn-text">How to Watch</span>
               </button>
-
-              <!-- Plus Button (Watchlist) -->
               <button id="modal-watchlist-btn" class="apple-icon-btn focusable" tabindex="0" aria-label="Add to Up Next">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 22px; height: 22px;">
                   <line x1="12" y1="5" x2="12" y2="19"/>
                   <line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
               </button>
-
-              <!-- More / Episodes Button -->
-              <button id="modal-more-btn" class="apple-icon-btn focusable" tabindex="0" aria-label="Episodes and Details">
+              <button id="modal-more-btn" class="apple-icon-btn focusable" tabindex="0" aria-label="Details">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width: 20px; height: 20px;">
-                  <line x1="8" y1="6" x2="21" y2="6"/>
-                  <line x1="8" y1="12" x2="21" y2="12"/>
-                  <line x1="8" y1="18" x2="21" y2="18"/>
-                  <line x1="3" y1="6" x2="3.01" y2="6"/>
-                  <line x1="3" y1="12" x2="3.01" y2="12"/>
-                  <line x1="3" y1="18" x2="3.01" y2="18"/>
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
                 </svg>
               </button>
             </div>
 
-            <!-- Sub-Info Text below buttons -->
-            <div id="modal-sub-info" class="modal-sub-info">
-              3 months free, then £9.99/month. Cancel at any time. Terms apply.
-            </div>
-
-            <!-- Starring Section (bottom right) -->
+            <!-- Starring & Director Section (Bottom Right) -->
             <div id="modal-starring" class="modal-starring">
-              <span class="starring-label">Starring</span>
-              <span id="starring-names" class="starring-names">Jason Sudeikis, Hannah Waddingham, Juno Temple</span>
+              <div class="starring-line">Starring <span id="starring-names" class="starring-names">Tom Holland, Zendaya, Sadie Sink</span></div>
+              <div id="modal-director-line" class="director-line">Director <span id="director-names" class="director-names">Destin Daniel Cretton</span></div>
             </div>
           </div>
 
-          <!-- Bottom Card Peek (Top edge of episodes row peeking up) -->
+          <!-- Bottom Card Peek (Top 36px edge of trailers peeking up) -->
           <div id="modal-bottom-peek" class="modal-bottom-peek">
             <div class="bottom-peek-card"></div>
             <div class="bottom-peek-card"></div>
-            <div class="bottom-peek-card"></div>
-            <div class="bottom-peek-card"></div>
           </div>
-        </div>
-
-        <!-- Right Peek Card (Next title in search results) -->
-        <div id="modal-peek-right" class="modal-peek-card peek-right" aria-hidden="true">
-          <img id="peek-right-img" class="peek-img" src="" alt="">
         </div>
       </div>
 
-      <!-- Scrollable Lower Content (Stages 4 & 5) -->
+      <!-- Scrollable Lower Content (Stage 4 Scrolled View with Blurred Backdrop) -->
       <div id="modal-scroll-container" class="modal-scroll-container">
-        <!-- Spacer for initial 100vh hero height -->
+        <!-- Spacer for initial 1080px hero height -->
         <div class="scroll-hero-spacer"></div>
 
+        <!-- Blurred Background Canvas for Stage 4 -->
+        <div id="modal-scroll-backdrop" class="modal-scroll-backdrop">
+          <img id="modal-scroll-bg-img" class="modal-scroll-bg-img" src="" alt="">
+          <div class="scroll-backdrop-dimmer"></div>
+        </div>
+
         <div class="scroll-content-body">
-          <!-- Centered Show Title (Stage 4) -->
-          <h2 id="modal-scroll-title" class="scroll-show-title">TED LASSO</h2>
-
-          <!-- Season Tabs Row (TV Shows) -->
-          <div id="modal-season-tabs-container" class="season-tabs-container">
-            <div id="modal-season-tabs" class="season-tabs-bar" role="tablist">
-              <!-- Dynamically populated: Season 1, Season 2, Season 3... -->
-            </div>
+          <!-- Centered Official Logo (Clearart) in Scrolled View -->
+          <div class="scroll-logo-wrapper">
+            <img id="modal-scroll-logo" class="modal-scroll-logo" src="" alt="" style="display: none;">
+            <h2 id="modal-scroll-title" class="scroll-show-title">SPIDER-MAN: BRAND NEW DAY</h2>
           </div>
 
-          <!-- Episodes Horizontal Carousel -->
-          <div id="modal-episodes-section" class="content-row-section">
-            <div id="modal-episodes-list" class="episodes-cards-row" role="region" aria-label="Episodes">
-              <!-- Dynamically populated episode cards matching Image 4 -->
-            </div>
+          <!-- Season Tabs Row (for TV Shows) -->
+          <div id="modal-season-tabs-container" class="season-tabs-container" style="display: none;">
+            <div id="modal-season-tabs" class="season-tabs-bar" role="tablist"></div>
           </div>
 
-          <!-- Trailers & Bonus Row -->
+          <!-- Episodes Horizontal Carousel (for TV Shows) -->
+          <div id="modal-episodes-section" class="content-row-section" style="display: none;">
+            <div id="modal-episodes-list" class="episodes-cards-row" role="region" aria-label="Episodes"></div>
+          </div>
+
+          <!-- Trailers Section (Exact 1:1 with media_1791752678958_375dc424.png) -->
           <div id="modal-trailers-section" class="content-row-section">
             <h3 class="section-heading">Trailers</h3>
-            <div id="modal-trailers-list" class="trailers-cards-row">
-              <!-- Dynamically populated trailers -->
-            </div>
+            <div id="modal-trailers-list" class="trailers-cards-row"></div>
           </div>
 
-          <!-- Related Titles Row (Stage 5) -->
+          <!-- Related Titles Row (Exact 1:1 with media_1791752678958_375dc424.png) -->
           <div id="modal-related-section" class="content-row-section">
             <h3 class="section-heading">Related</h3>
-            <div id="modal-related-list" class="related-cards-row">
-              <!-- Dynamically populated portrait cards matching Image 5 -->
-            </div>
+            <div id="modal-related-list" class="related-cards-row"></div>
           </div>
 
-          <!-- Cast & Crew Row (Stage 5) -->
+          <!-- Cast & Crew Row -->
           <div id="modal-cast-section" class="content-row-section">
             <h3 class="section-heading">Cast & Crew</h3>
-            <div id="modal-cast-list" class="cast-avatars-row">
-              <!-- Dynamically populated circular avatar cards matching Image 5 -->
-            </div>
+            <div id="modal-cast-list" class="cast-avatars-row"></div>
           </div>
         </div>
       </div>
 
-      <!-- Sleek Stream Selection Drawer (Overlay when streams are loading/choosing) -->
+      <!-- Stream Selection Drawer -->
       <div id="modal-stream-selector" class="modal-stream-drawer glass-panel" style="display: none;">
         <div class="stream-drawer-header">
           <div class="stream-drawer-title-group">
@@ -442,53 +427,168 @@
       </div>
     </div>
 
-    <!-- Fullscreen TV Streaming Video Player Overlay -->
+    <!-- Fullscreen Apple TV+ 1:1 Video Player Overlay -->
     <div id="video-player-container" class="video-player-container" style="display: none;">
       <video id="stream-video" class="stream-video" playsinline></video>
-      <div id="player-osd" class="player-osd">
-        <div class="player-top-bar">
-          <button id="player-back-btn" class="player-btn focusable" tabindex="0" title="Back">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 24px; height: 24px;">
-              <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-          </button>
-          <div id="player-title" class="player-title">Now Playing</div>
+
+      <!-- Stage 1 Initial Play Overlay: BBFC Rating + Apple TV Logo (fades out after 3s) -->
+      <div id="player-start-overlay" class="player-start-overlay">
+        <div class="player-start-badge">
+          <img id="player-rating-badge" src="assets/15.svg" class="player-rating-img" alt="Rating">
         </div>
-        <div class="player-bottom-bar">
-          <div class="player-progress-container" id="player-progress-container">
-            <div id="player-progress-bar" class="player-progress-bar focusable" tabindex="0">
+        <div class="player-start-center">
+          <img src="icons/apple_tv_logo.svg" class="player-start-apple-tv" alt="Apple TV">
+        </div>
+      </div>
+
+      <!-- Exact Apple 12-Blade Buffering Spinner (OLED Black) -->
+      <div id="player-buffering-overlay" class="player-buffering-overlay" style="display: none;">
+        <svg class="apple-spinner" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+          <g class="apple-spinner-blades">
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="1.00" transform="rotate(0 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.91" transform="rotate(30 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.82" transform="rotate(60 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.73" transform="rotate(90 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.64" transform="rotate(120 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.55" transform="rotate(150 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.46" transform="rotate(180 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.37" transform="rotate(210 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.28" transform="rotate(240 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.20" transform="rotate(270 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.14" transform="rotate(300 32 32)"/>
+            <rect x="29.5" y="4" width="5" height="15" rx="2.5" fill="#ffffff" opacity="0.08" transform="rotate(330 32 32)"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Bottom Player OSD Controls (1:1 with media_1791751764576_585ae262.png) -->
+      <div id="player-osd" class="player-osd">
+        <div class="player-info-block">
+          <div id="player-sub-title" class="player-sub-title">S1, E1 · This Is What Happens</div>
+          <h2 id="player-main-title" class="player-main-title">Your Friends & Neighbours</h2>
+        </div>
+
+        <!-- Scrubber Bar with Playhead Thumb & Floating Thumbnail Preview -->
+        <div class="player-scrubber-wrapper">
+          <!-- Floating Video Thumbnail Preview Box (media_1791751918775_b4e1820f.png) -->
+          <div id="player-preview-box" class="player-preview-box" style="display: none;">
+            <img id="player-preview-img" class="player-preview-img" src="" alt="Preview">
+            <span id="player-preview-time" class="player-preview-time">03:12</span>
+          </div>
+
+          <div id="player-timeline" class="player-timeline focusable" tabindex="0">
+            <div class="player-track">
               <div id="player-progress-fill" class="player-progress-fill">
-                <div class="player-scrubber-handle"></div>
+                <div id="player-scrubber-thumb" class="player-scrubber-thumb"></div>
               </div>
             </div>
           </div>
-          <div class="player-controls-row">
-            <div class="player-controls-left">
-              <button id="player-play-btn" class="player-btn focusable" tabindex="0">
-                <svg id="player-play-icon" viewBox="0 0 24 24" fill="currentColor" style="width: 28px; height: 28px;">
-                  <polygon points="5 3 19 12 5 21 5 3"/>
+
+          <!-- Time Display Row: Elapsed + Fast-Forward Icon & Remaining Time -->
+          <div class="player-time-row">
+            <div class="player-time-left">
+              <span id="player-time-current">00:21</span>
+              <span id="player-ffwd-indicator" class="player-ffwd-indicator" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="ffwd-svg">
+                  <polygon points="5 4 15 12 5 20 5 4"/>
+                  <polygon points="13 4 23 12 13 20 13 4"/>
                 </svg>
-              </button>
-              <span id="player-time-display" class="player-time-display">0:00 / 0:00</span>
+              </span>
             </div>
-            <div class="player-controls-right">
-              <button id="player-audio-btn" class="player-btn player-audio-btn focusable" tabindex="0" title="Audio Language" aria-label="Audio Language">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width: 20px; height: 20px; margin-right: 8px;">
-                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
-                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                  <line x1="12" y1="19" x2="12" y2="23"/>
-                  <line x1="8" y1="23" x2="16" y2="23"/>
-                </svg>
-                <span id="player-audio-current" class="player-audio-current">Audio: EN</span>
-              </button>
+            <div class="player-time-right">
+              <span id="player-time-remaining">-58:38</span>
             </div>
           </div>
         </div>
-        <!-- Audio Track Switcher Menu -->
-        <div id="player-audio-menu" class="player-audio-menu glass-panel" style="display: none;">
-          <div class="audio-menu-header">Audio Language</div>
-          <div id="player-audio-list" class="player-audio-list"></div>
+
+        <!-- Bottom Controls & Pill Buttons Row -->
+        <div class="player-bottom-row">
+          <div class="player-pill-group">
+            <button id="player-tab-info" class="player-pill-btn focusable active" tabindex="0">Info</button>
+            <button id="player-tab-insight" class="player-pill-btn focusable" tabindex="0">InSight</button>
+            <button id="player-tab-continue" class="player-pill-btn focusable" tabindex="0">Continue Watching</button>
+          </div>
+
+          <div class="player-icon-group">
+            <!-- Subtitles Button (icons/ic_player_subtitles.svg) -->
+            <button id="player-subtitles-btn" class="player-circle-btn focusable" tabindex="0" aria-label="Subtitles">
+              <img src="icons/ic_player_subtitles.svg" class="player-icon-svg" alt="Subtitles">
+            </button>
+            <!-- Audio Language Button (icons/ic_player_language.svg) -->
+            <button id="player-audio-btn" class="player-circle-btn focusable" tabindex="0" aria-label="Audio Track">
+              <img src="icons/ic_player_language.svg" class="player-icon-svg" alt="Audio">
+            </button>
+          </div>
         </div>
+
+        <!-- Floating Subtitles Popup Panel (media_1791751758637_ece7cec6.png) -->
+        <div id="player-subtitles-modal" class="player-floating-panel subtitles-panel" style="display: none;">
+          <div class="floating-panel-header">Subtitles</div>
+          <div class="floating-panel-item focusable" id="sub-option-on">On</div>
+          <div class="floating-panel-item focusable active" id="sub-option-off"><span class="check-icon">✓</span> Off</div>
+          <div class="floating-panel-nav focusable" id="sub-language-nav">
+            <div class="nav-label-group">
+              <span class="nav-primary">Language</span>
+              <span class="nav-secondary">English</span>
+            </div>
+            <span class="nav-chevron">›</span>
+          </div>
+          <div class="floating-panel-nav focusable" id="sub-style-nav">
+            <div class="nav-label-group">
+              <span class="nav-primary">Style</span>
+              <span class="nav-secondary">Transparent Background</span>
+            </div>
+            <span class="nav-chevron">›</span>
+          </div>
+        </div>
+
+        <!-- Floating Audio Track Popup Panel (media_1791751779954_be8a2fd4.png) -->
+        <div id="player-audio-modal" class="player-floating-panel audio-panel" style="display: none;">
+          <div class="floating-panel-header">Audio</div>
+          <div class="floating-panel-item focusable active" id="audio-opt-orig"><span class="check-icon">✓</span> Original: English</div>
+          <div class="floating-panel-item focusable" id="audio-opt-ad">English [AD]</div>
+          <div class="floating-panel-item focusable" id="audio-opt-fr-ca">French (Canada)</div>
+          <div class="floating-panel-item focusable" id="audio-opt-fr-ca-ad">French (Canada) [AD]</div>
+          <div class="floating-panel-item focusable" id="audio-opt-fr">French (France)</div>
+        </div>
+
+        <!-- Lower Drawers (Info, InSight, Continue Watching) -->
+        <div id="player-drawer-container" class="player-drawer-container">
+          <!-- Info Drawer (media_1791751888037_6a652d84.png) -->
+          <div id="player-drawer-info" class="player-drawer-card drawer-info" style="display: none;">
+            <div class="drawer-info-left">
+              <img id="drawer-info-thumb" class="drawer-info-thumb" src="" alt="Thumbnail">
+            </div>
+            <div class="drawer-info-center">
+              <h3 id="drawer-info-title" class="drawer-info-title">This Is What Happens</h3>
+              <p id="drawer-info-synopsis" class="drawer-info-synopsis">After losing his high-powered job, Coop attends a neighbor's barbecue, where he faces his ex-wife Mel—and makes a surprising choice.</p>
+              <div class="drawer-info-meta">
+                <span id="drawer-info-genres">Drama</span>
+                <span id="drawer-info-ep">S1, E1</span>
+                <span id="drawer-info-runtime">55 mins</span>
+                <img src="assets/15.svg" class="drawer-meta-badge" alt="15">
+                <span class="tech-badge tech-badge-pill">CC</span>
+                <span class="tech-badge tech-badge-pill">SDH</span>
+                <span class="tech-badge tech-badge-pill">AD</span>
+              </div>
+            </div>
+            <div class="drawer-info-right">
+              <button id="btn-from-beginning" class="drawer-action-btn focusable" tabindex="0">▶ From Beginning</button>
+              <button id="btn-goto-show" class="drawer-action-btn focusable" tabindex="0">ⓘ Go to Show</button>
+            </div>
+          </div>
+
+          <!-- InSight Drawer (media_1791751793774_22a9ce75.png) -->
+          <div id="player-drawer-insight" class="player-drawer-row drawer-insight" style="display: none;">
+            <!-- InSight Cast Cards dynamically populated -->
+          </div>
+
+          <!-- Continue Watching Drawer (media_1791751902326_c51fbeef.png) -->
+          <div id="player-drawer-continue" class="player-drawer-row drawer-continue" style="display: none;">
+            <!-- Continue Watching Cards dynamically populated -->
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -496,6 +596,7 @@
 
   <!-- webOS Scripts -->
   <script src="js/magic-remote.js"></script>
+  <script src="js/loader.js"></script>
   <script src="js/player.js"></script>
   <script src="js/keyboard.js"></script>
   <script src="js/navbar.js"></script>

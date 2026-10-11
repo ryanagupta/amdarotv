@@ -34,9 +34,10 @@ var DetailView = (function () {
   var closeBtnEl = null;
 
   // Hero Metadata Elements
-  var tagPillEl = null;
+  var titleLogoEl = null;
   var titleEl = null;
   var categoryTextEl = null;
+  var ageBadgeImgEl = null;
   var ageBadgeEl = null;
   var overviewEl = null;
   var dateRuntimeEl = null;
@@ -47,10 +48,15 @@ var DetailView = (function () {
   var subInfoEl = null;
   var starringNamesEl = null;
   var starringWrapper = null;
+  var directorNamesEl = null;
+  var directorWrapper = null;
 
   // Scrollable Section Elements
   var scrollContainerEl = null;
+  var scrollLogoEl = null;
   var scrollTitleEl = null;
+  var scrollBgImgEl = null;
+  var scrollBackdropEl = null;
   var seasonTabsContainer = null;
   var seasonTabsEl = null;
   var episodesSectionEl = null;
@@ -94,9 +100,10 @@ var DetailView = (function () {
     topHintEl = document.getElementById('modal-top-hint');
     closeBtnEl = document.getElementById('modal-close-btn');
 
-    tagPillEl = document.getElementById('modal-tag-pill');
+    titleLogoEl = document.getElementById('modal-title-logo');
     titleEl = document.getElementById('modal-title');
     categoryTextEl = document.getElementById('modal-category-text');
+    ageBadgeImgEl = document.getElementById('modal-age-badge-img');
     ageBadgeEl = document.getElementById('modal-age-badge');
     overviewEl = document.getElementById('modal-overview');
     dateRuntimeEl = document.getElementById('modal-date-runtime');
@@ -107,9 +114,14 @@ var DetailView = (function () {
     subInfoEl = document.getElementById('modal-sub-info');
     starringNamesEl = document.getElementById('starring-names');
     starringWrapper = document.getElementById('modal-starring');
+    directorNamesEl = document.getElementById('director-names');
+    directorWrapper = document.getElementById('modal-director');
 
     scrollContainerEl = document.getElementById('modal-scroll-container');
+    scrollLogoEl = document.getElementById('modal-scroll-logo');
     scrollTitleEl = document.getElementById('modal-scroll-title');
+    scrollBgImgEl = document.getElementById('modal-scroll-bg-img');
+    scrollBackdropEl = document.getElementById('modal-scroll-backdrop');
     seasonTabsContainer = document.getElementById('modal-season-tabs-container');
     seasonTabsEl = document.getElementById('modal-season-tabs');
     episodesSectionEl = document.getElementById('modal-episodes-section');
@@ -246,15 +258,8 @@ var DetailView = (function () {
       scrollContainerEl.scrollTop = 0;
     }
 
-    // Start in Stage 1: Rounded Card, Pristine Image, No text overlay
-    transitionToStage(1);
-
-    // Auto-advance to Stage 2 after 1.6 seconds (smooth metadata fade-in)
-    stageTimer = setTimeout(function () {
-      if (isOpen && currentStage === 1) {
-        transitionToStage(2);
-      }
-    }, 1600);
+    // Start in Stage 3: Full Hero mode with ClearArt logo, metadata and white Play pill
+    transitionToStage(3);
 
     // Fetch full TMDB data (cast, seasons, episodes, related, trailers) in background
     fetchFullDetails(item);
@@ -300,19 +305,27 @@ var DetailView = (function () {
     if (heroBgImgEl) {
       heroBgImgEl.src = highResBg;
     }
+    if (scrollBgImgEl) {
+      scrollBgImgEl.src = highResBg;
+    }
 
-    // Display title
+    // Display title & reset logo visibility
     var title = item.title || item.name || '';
-    if (titleEl) titleEl.textContent = title;
-    if (scrollTitleEl) scrollTitleEl.textContent = title;
-
-    // Top Tag Pill
-    if (tagPillEl) {
-      if (isTv) {
-        tagPillEl.textContent = 'All Episodes Now Available';
-      } else {
-        tagPillEl.textContent = 'Now Streaming';
-      }
+    if (titleLogoEl) {
+      titleLogoEl.src = '';
+      titleLogoEl.style.display = 'none';
+    }
+    if (titleEl) {
+      titleEl.style.display = 'block';
+      titleEl.textContent = title;
+    }
+    if (scrollLogoEl) {
+      scrollLogoEl.src = '';
+      scrollLogoEl.style.display = 'none';
+    }
+    if (scrollTitleEl) {
+      scrollTitleEl.style.display = 'block';
+      scrollTitleEl.textContent = title;
     }
 
     // Category / Genre text
@@ -323,9 +336,7 @@ var DetailView = (function () {
     }
 
     // Age certification badge
-    if (ageBadgeEl) {
-      ageBadgeEl.textContent = item.certification || (isTv ? '15' : '12');
-    }
+    updateAgeBadge(item.certification || (isTv ? '15' : '12'));
 
     // Overview
     if (overviewEl) {
@@ -397,7 +408,11 @@ var DetailView = (function () {
 
         // Ensure scroll container is at top
         if (scrollContainerEl) {
-          scrollContainerEl.scrollTo({ top: 0, behavior: 'smooth' });
+          try {
+            scrollContainerEl.scrollTo({ top: 0, behavior: 'smooth' });
+          } catch (e) {
+            scrollContainerEl.scrollTop = 0;
+          }
         }
 
         // Apply 5-way focus to the primary Play Button
@@ -410,27 +425,100 @@ var DetailView = (function () {
 
       case 4:
       case 5:
-        // Stage 4 & 5: Scrolled down to episodes/related/cast
+        // Stage 4 & 5: Scrolled down to episodes/trailers/related
         carouselStageEl.classList.add('stage-3-fullscreen', 'stage-4-scrolled');
         modalEl.classList.add('stage-4-active');
         if (topHintEl) topHintEl.classList.remove('visible');
 
-        // Smoothly scroll down
+        // Smoothly push down to lower content (Stage 4)
         if (scrollContainerEl) {
-          var targetY = 940; // Height of hero screen
-          scrollContainerEl.scrollTo({ top: targetY, behavior: 'smooth' });
+          var targetY = 1080;
+          try {
+            scrollContainerEl.scrollTo({ top: targetY, behavior: 'smooth' });
+          } catch (e) {
+            scrollContainerEl.scrollTop = targetY;
+          }
         }
 
-        // Focus first season pill or first episode card
+        // Focus first season pill or first episode card or first trailer
         setTimeout(function () {
           var firstSeason = seasonTabsEl ? seasonTabsEl.querySelector('.season-tab-btn') : null;
           var firstEp = episodesListEl ? episodesListEl.querySelector('.episode-card') : null;
-          var target = firstSeason || firstEp || playBtn;
+          var firstTrailer = trailersListEl ? trailersListEl.querySelector('.trailer-card') : null;
+          var target = firstSeason || firstEp || firstTrailer || playBtn;
           if (target && window.MagicRemote) {
             window.MagicRemote.setFocus(target);
           }
         }, 300);
         break;
+    }
+  }
+
+  /**
+   * Fetch official clearart logo from TMDB
+   */
+  function fetchImages(item) {
+    var isTv = item.mediaType === 'tv';
+    var url = 'https://api.themoviedb.org/3/' + (isTv ? 'tv' : 'movie') + '/' + item.id + '/images?api_key=' + TMDB_KEY;
+    fetchJSON(url, function (err, data) {
+      if (err || !data || !data.logos || data.logos.length === 0) return;
+      var bestLogo = null;
+      for (var i = 0; i < data.logos.length; i++) {
+        var l = data.logos[i];
+        if (l.iso_639_1 === 'en' || !l.iso_639_1) {
+          bestLogo = l;
+          break;
+        }
+      }
+      if (!bestLogo) bestLogo = data.logos[0];
+      if (bestLogo && bestLogo.file_path) {
+        var logoUrl = 'https://image.tmdb.org/t/p/w500' + bestLogo.file_path;
+        if (titleLogoEl) {
+          titleLogoEl.src = logoUrl;
+          titleLogoEl.style.display = 'block';
+        }
+        if (titleEl) {
+          titleEl.style.display = 'none';
+        }
+        if (scrollLogoEl) {
+          scrollLogoEl.src = logoUrl;
+          scrollLogoEl.style.display = 'block';
+        }
+        if (scrollTitleEl) {
+          scrollTitleEl.style.display = 'none';
+        }
+      }
+    });
+  }
+
+  /**
+   * Update BBFC Age Rating Badges (15, 12, 18, PG, U)
+   */
+  function updateAgeBadge(cert) {
+    var raw = (cert || '15').toString().toUpperCase().trim();
+    if (raw === 'R' || raw === 'TV-MA' || raw === '16' || raw === 'MA') raw = '15';
+    else if (raw === 'PG-13' || raw === 'TV-14') raw = '12';
+    else if (raw === 'TV-PG') raw = 'PG';
+    else if (raw === 'G' || raw === 'TV-G' || raw === 'TV-Y' || raw === 'TV-Y7') raw = 'U';
+
+    var assetMap = {
+      '15': 'assets/15.svg',
+      '18': 'assets/18.png',
+      '12': 'assets/12.png',
+      '12A': 'assets/12A.png',
+      'PG': 'assets/PG.png',
+      'U': 'assets/U.png'
+    };
+
+    var asset = assetMap[raw];
+    if (asset && ageBadgeImgEl) {
+      ageBadgeImgEl.src = asset;
+      ageBadgeImgEl.style.display = 'inline-block';
+      if (ageBadgeEl) ageBadgeEl.style.display = 'none';
+    } else if (ageBadgeEl) {
+      ageBadgeEl.textContent = cert || '15';
+      ageBadgeEl.style.display = 'inline-flex';
+      if (ageBadgeImgEl) ageBadgeImgEl.style.display = 'none';
     }
   }
 
@@ -442,6 +530,9 @@ var DetailView = (function () {
     var endpoint = isTv
       ? 'https://api.themoviedb.org/3/tv/' + item.id + '?api_key=' + TMDB_KEY + '&append_to_response=credits,recommendations,similar,videos,content_ratings'
       : 'https://api.themoviedb.org/3/movie/' + item.id + '?api_key=' + TMDB_KEY + '&append_to_response=credits,recommendations,similar,videos,release_dates';
+
+    // 0. Fetch TMDB ClearArt Logos
+    fetchImages(item);
 
     fetchJSON(endpoint, function (err, data) {
       if (err || !data) return;
@@ -457,8 +548,8 @@ var DetailView = (function () {
 
       // 2. Refined Age Certification
       var cert = extractCertification(data, isTv);
-      if (cert && ageBadgeEl) {
-        ageBadgeEl.textContent = cert;
+      if (cert) {
+        updateAgeBadge(cert);
       }
 
       // 3. Runtime & Air Date
@@ -485,6 +576,17 @@ var DetailView = (function () {
         }
         if (starringWrapper) {
           starringWrapper.style.display = 'block';
+        }
+      }
+
+      // 4b. Director / Creator
+      if (data.credits && data.credits.crew) {
+        var directors = data.credits.crew.filter(function (c) {
+          return c.job === 'Director' || c.job === 'Executive Producer' || c.job === 'Creator';
+        });
+        if (directors.length > 0 && directorNamesEl) {
+          directorNamesEl.textContent = directors.slice(0, 2).map(function (d) { return d.name; }).join(', ');
+          if (directorWrapper) directorWrapper.style.display = 'block';
         }
       }
 
@@ -848,7 +950,18 @@ var DetailView = (function () {
         card.addEventListener('click', function () {
           streamSelectorEl.style.display = 'none';
           if (window.StreamPlayer) {
-            window.StreamPlayer.load(st.url, { title: title, quality: info.quality });
+            var isTv = currentItem && currentItem.mediaType === 'tv';
+            window.StreamPlayer.load(st.url, {
+              title: currentItem ? (currentItem.title || currentItem.name) : 'Apple TV+',
+              subTitle: isTv ? title : (currentItem ? (currentItem.year || '') : ''),
+              overview: currentItem ? currentItem.overview : '',
+              thumb: currentItem ? (currentItem.backdrop || currentItem.poster) : '',
+              rating: currentItem ? (currentItem.certification || '15') : '15',
+              genres: currentItem ? (currentItem.genres || 'Drama') : 'Drama',
+              runtime: currentItem ? (isTv ? '50 mins' : '1h 55m') : '50 mins',
+              cast: (currentShowData && currentShowData.credits && currentShowData.credits.cast) ? currentShowData.credits.cast : [],
+              continueItems: (currentShowData && currentShowData.recommendations && currentShowData.recommendations.results) ? currentShowData.recommendations.results : (itemsList || [])
+            });
             window.StreamPlayer.play();
           }
         });
@@ -918,18 +1031,12 @@ var DetailView = (function () {
     }
 
     // If scrolled down in Stage 4/5, scroll back up to Stage 3 Hero
-    if (currentStage >= 4 && scrollContainerEl && scrollContainerEl.scrollTop > 100) {
+    if (currentStage >= 4) {
       transitionToStage(3);
       return true;
     }
 
-    // If in Stage 3 Full Screen, return to Stage 2 Centered Card
-    if (currentStage === 3) {
-      transitionToStage(2);
-      return true;
-    }
-
-    // If in Stage 2 or 1, close modal completely
+    // If in Stage 3, close modal completely
     close();
     return true;
   }
@@ -941,57 +1048,35 @@ var DetailView = (function () {
     if (!isOpen || !window.MagicRemote) return;
     var KEYS = window.MagicRemote.KEYS;
 
-    // Stage 1: Any key immediately advances to Stage 2
-    if (currentStage === 1) {
-      clearTimeout(stageTimer);
-      transitionToStage(2);
-      return;
-    }
-
-    // Stage 2:
-    if (currentStage === 2) {
-      if (keyCode === KEYS.DOWN || keyCode === KEYS.OK) {
-        // Expand to Full Screen (Stage 3)
-        transitionToStage(3);
+    // Stage 3 (Full Screen Hero):
+    if (currentStage === 3) {
+      if (keyCode === KEYS.DOWN) {
+        // Press Down scrolls smoothly down to Stage 4 (Episodes / Related / Trailers)
+        transitionToStage(4);
         return;
       }
-      if (keyCode === KEYS.LEFT) {
+      if (keyCode === KEYS.LEFT && itemsList.length > 1) {
         stepNeighbor(-1);
         return;
       }
-      if (keyCode === KEYS.RIGHT) {
+      if (keyCode === KEYS.RIGHT && itemsList.length > 1) {
         stepNeighbor(1);
         return;
       }
-      if (keyCode === KEYS.UP) {
-        close();
-        return;
-      }
     }
 
-    // Stage 3 (Full Screen Hero):
-    if (currentStage === 3) {
-      var focused = document.activeElement;
-      if (keyCode === KEYS.DOWN) {
-        // If on action buttons row, scroll down to Stage 4 (Episodes)
-        if (focused === playBtn || focused === watchlistBtn || focused === moreBtn) {
-          transitionToStage(4);
-          return;
-        }
-      }
-      if (keyCode === KEYS.UP) {
-        // Press Up returns to Stage 2 (Centered Card mode)
-        transitionToStage(2);
-        return;
-      }
-    }
-
-    // Stage 4 / 5 (Scrolled Down):
+    // Stage 4 / 5 (Scrolled Down Content):
     if (currentStage >= 4) {
-      var focusedEl = document.activeElement;
       if (keyCode === KEYS.UP) {
-        // If on season tab or first episode, scroll back up to hero
-        if (focusedEl && (focusedEl.classList.contains('season-tab-btn') || focusedEl === episodesListEl.firstElementChild)) {
+        var focusedEl = document.activeElement;
+        // If on season tabs, or first row, or near the top of Stage 4, push back up to Stage 3 Hero
+        var isTopRow = !focusedEl ||
+          focusedEl.classList.contains('season-tab-btn') ||
+          (episodesListEl && episodesListEl.firstElementChild === focusedEl) ||
+          (trailersListEl && trailersListEl.firstElementChild === focusedEl) ||
+          (scrollContainerEl && scrollContainerEl.scrollTop <= 1120);
+
+        if (isTopRow) {
           transitionToStage(3);
           return;
         }
