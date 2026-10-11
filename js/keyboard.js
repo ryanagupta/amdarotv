@@ -1,7 +1,7 @@
 /**
- * Alphabet Keyboard Controller for webOS 4.0 TV (Chromium 53)
- * Full A-Z letter tiles + Space & Delete
- * Compatible with Chromium 53 (No CSS Grid, Flexbox row layouts)
+ * Apple TV+ On-Screen Keyboard Controller for webOS 4.0 TV (Chromium 53)
+ * Exact 6-column x 5-row layout + Mode Switcher [ abc | 123 ] + Action Row (SPACE, [⌫], CLEAR)
+ * Smooth auto-collapse to the left margin with spatial navigation integration.
  */
 
 var OnScreenKeyboard = (function () {
@@ -10,6 +10,7 @@ var OnScreenKeyboard = (function () {
   var keyboardElement = null;
   var searchInput = null;
   var isCollapsed = false;
+  var currentMode = 'abc';
 
   function init() {
     keyboardElement = document.getElementById('onscreen-keyboard');
@@ -17,18 +18,18 @@ var OnScreenKeyboard = (function () {
 
     if (!keyboardElement || !searchInput) return;
 
-    // Attach click listeners to all letter tiles
-    var letterTiles = keyboardElement.querySelectorAll('.kb-tile[data-char]');
-    for (var i = 0; i < letterTiles.length; i++) {
-      (function (tile) {
-        tile.addEventListener('click', function (e) {
+    // Attach click listeners to all character keys (.kb-key[data-char])
+    var charKeys = keyboardElement.querySelectorAll('.kb-key[data-char]');
+    for (var i = 0; i < charKeys.length; i++) {
+      (function (key) {
+        key.addEventListener('click', function (e) {
           e.stopPropagation();
-          var char = tile.getAttribute('data-char');
+          var char = key.getAttribute('data-char');
           if (char) {
             insertText(char);
           }
         });
-      })(letterTiles[i]);
+      })(charKeys[i]);
     }
 
     // Space button
@@ -40,7 +41,7 @@ var OnScreenKeyboard = (function () {
       });
     }
 
-    // Delete button
+    // Backspace button
     var deleteBtn = document.getElementById('kb-btn-delete');
     if (deleteBtn) {
       deleteBtn.addEventListener('click', function (e) {
@@ -49,11 +50,58 @@ var OnScreenKeyboard = (function () {
       });
     }
 
-    console.log('[Keyboard] Alphabet keyboard initialized with direct letter tiles.');
+    // Clear button
+    var clearBtn = document.getElementById('kb-btn-clear');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        clearText();
+      });
+    }
+
+    // Mode switchers: [ abc | 123 ]
+    var modeAbc = document.getElementById('kb-mode-abc');
+    var mode123 = document.getElementById('kb-mode-123');
+
+    if (modeAbc) {
+      modeAbc.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setMode('abc');
+      });
+    }
+
+    if (mode123) {
+      mode123.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setMode('123');
+      });
+    }
+
+    console.log('[Keyboard] Apple TV+ 6-column keyboard initialized.');
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    var modeAbc = document.getElementById('kb-mode-abc');
+    var mode123 = document.getElementById('kb-mode-123');
+    var gridAbc = document.getElementById('kb-grid-abc');
+    var grid123 = document.getElementById('kb-grid-123');
+
+    if (mode === '123') {
+      if (modeAbc) modeAbc.classList.remove('active');
+      if (mode123) mode123.classList.add('active');
+      if (gridAbc) gridAbc.style.display = 'none';
+      if (grid123) grid123.style.display = 'flex';
+    } else {
+      if (mode123) mode123.classList.remove('active');
+      if (modeAbc) modeAbc.classList.add('active');
+      if (grid123) grid123.style.display = 'none';
+      if (gridAbc) gridAbc.style.display = 'flex';
+    }
   }
 
   var lastInputTime = 0;
-  var INPUT_DEBOUNCE_MS = 180;
+  var INPUT_DEBOUNCE_MS = 140;
 
   function insertText(char) {
     var now = Date.now();
@@ -75,13 +123,25 @@ var OnScreenKeyboard = (function () {
     triggerInputEvent();
   }
 
+  function clearText() {
+    if (!searchInput) return;
+    searchInput.value = '';
+    triggerInputEvent();
+  }
+
+  function setText(text) {
+    if (!searchInput) return;
+    searchInput.value = text || '';
+    triggerInputEvent();
+  }
+
   function triggerInputEvent() {
     var event = document.createEvent('Event');
     event.initEvent('input', true, true);
     searchInput.dispatchEvent(event);
   }
 
-  // Smooth sliding collapse into the left edge
+  // Smooth sliding collapse into the left edge (Image 3)
   function collapseToLeft() {
     if (isCollapsed) return;
     isCollapsed = true;
@@ -131,6 +191,11 @@ var OnScreenKeyboard = (function () {
     collapseToLeft: collapseToLeft,
     expandFromLeft: expandFromLeft,
     toggle: toggle,
+    setMode: setMode,
+    insertText: insertText,
+    deleteChar: deleteChar,
+    clearText: clearText,
+    setText: setText,
     isCollapsed: function () {
       return isCollapsed;
     }

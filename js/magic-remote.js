@@ -153,10 +153,18 @@
     if (newBox) newBox.classList.add('focused');
 
     // Bridge: Auto collapse/expand on-screen keyboard based on focus target
-    var isMediaTile = element.closest('.search-results-grid') || element.classList.contains('media-tile');
+    var isResultsOrBrowse = element.closest('.search-results-grid') ||
+                            element.closest('#search-browse-section') ||
+                            element.closest('#search-suggestions-bar') ||
+                            element.closest('#search-category-tabs') ||
+                            element.classList.contains('media-card-wide') ||
+                            element.classList.contains('media-card-poster') ||
+                            element.classList.contains('browse-card') ||
+                            element.classList.contains('sugg-pill') ||
+                            element.classList.contains('category-tab-pill');
     var isKeyboardTile = element.closest('#onscreen-keyboard');
 
-    if (isMediaTile && window.OnScreenKeyboard && typeof window.OnScreenKeyboard.collapseToLeft === 'function') {
+    if (isResultsOrBrowse && window.OnScreenKeyboard && typeof window.OnScreenKeyboard.collapseToLeft === 'function') {
       window.OnScreenKeyboard.collapseToLeft();
     } else if (isKeyboardTile && window.OnScreenKeyboard && typeof window.OnScreenKeyboard.expandFromLeft === 'function') {
       window.OnScreenKeyboard.expandFromLeft();
@@ -168,7 +176,7 @@
 
     // TV Partial Scroll Animation: Keeps navbar 100% fixed, glides tiles down/up just enough for the new row
     var scrollContainer = element.closest('.search-results-container') || document.getElementById('search-results-container');
-    if (scrollContainer && (element.classList.contains('media-tile') || element.closest('.search-results-grid'))) {
+    if (scrollContainer && (isResultsOrBrowse || element.classList.contains('media-tile') || element.closest('.search-results-grid'))) {
       scrollPartialContainer(scrollContainer, element);
     }
   }
@@ -312,24 +320,35 @@
    * Move focus geometrically to the nearest focusable element
    */
   function moveFocus(direction) {
-    // If on a media tile and moving left, expand keyboard and focus nearest row
-    if (direction === KEYS.LEFT && currentFocusedElement && (currentFocusedElement.classList.contains('media-tile') || currentFocusedElement.closest('.search-results-grid'))) {
+    // If on a media tile, browse card, or suggestion and moving left, expand keyboard and focus nearest row
+    var isContentCard = currentFocusedElement && (
+      currentFocusedElement.classList.contains('media-tile') ||
+      currentFocusedElement.classList.contains('media-card-wide') ||
+      currentFocusedElement.classList.contains('media-card-poster') ||
+      currentFocusedElement.classList.contains('browse-card') ||
+      currentFocusedElement.classList.contains('sugg-pill') ||
+      currentFocusedElement.classList.contains('category-tab-pill') ||
+      currentFocusedElement.closest('.search-results-grid') ||
+      currentFocusedElement.closest('#search-browse-section')
+    );
+
+    if (direction === KEYS.LEFT && isContentCard) {
       if (window.OnScreenKeyboard && typeof window.OnScreenKeyboard.isCollapsed === 'function' && window.OnScreenKeyboard.isCollapsed()) {
         var cRect = currentFocusedElement.getBoundingClientRect();
-        // Check if there are no media tiles further left in the same row
-        var grid = document.querySelector('.search-results-grid');
-        var tiles = grid ? grid.querySelectorAll('.media-tile') : [];
+        // Check if there are no items further left in the same row
+        var grid = document.querySelector('.search-results-grid') || document.querySelector('#search-browse-grid');
+        var siblings = grid ? grid.querySelectorAll('.focusable') : [];
         var isLeftmost = true;
-        for (var t = 0; t < tiles.length; t++) {
-          var tr = tiles[t].getBoundingClientRect();
-          if (tr.right < cRect.left - 5 && Math.abs(tr.top - cRect.top) < 50) {
+        for (var t = 0; t < siblings.length; t++) {
+          var tr = siblings[t].getBoundingClientRect();
+          if (tr.right < cRect.left - 5 && Math.abs(tr.top - cRect.top) < 60) {
             isLeftmost = false;
             break;
           }
         }
         if (isLeftmost) {
           window.OnScreenKeyboard.expandFromLeft();
-          var kbTiles = document.querySelectorAll('#onscreen-keyboard .kb-tile:not([disabled])');
+          var kbTiles = document.querySelectorAll('#onscreen-keyboard .kb-key:not([disabled]), #onscreen-keyboard .kb-key-action:not([disabled]), #onscreen-keyboard .kb-mode-pill:not([disabled])');
           var bestKbTile = null;
           var bestYDiff = Infinity;
           for (var k = 0; k < kbTiles.length; k++) {

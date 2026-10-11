@@ -52,94 +52,205 @@
       </div>
     </nav>
 
-    <!-- Middle-Top Search Bar (Vertically In Line with Menu Button & Substantially Bigger) -->
-    <header class="middle-top-search">
-      <div class="search-input-box glass-panel focusable" tabindex="0">
-        <svg class="search-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <!-- Apple TV+ Top Left Back / Search Pill (Images 1-5) -->
+    <div class="search-top-bar">
+      <button id="search-top-pill" class="search-top-pill focusable" tabindex="0" title="Search">
+        <span class="search-top-chevron">&lsaquo;</span>
+        <svg class="search-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <circle cx="11" cy="11" r="8"/>
           <line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
-        <input
-          type="text"
-          id="search-input"
-          class="search-input-field"
-          placeholder="Search movies, TV shows, actors..."
-          autocomplete="off"
-          readonly
-          tabindex="-1"
-        >
+        <span class="search-top-label">Search</span>
+      </button>
+    </div>
+
+    <!-- Apple TV+ Large Search Header & Suggestion Area -->
+    <header class="apple-search-header">
+      <!-- Main Search Query Display -->
+      <div class="apple-search-input-line">
+        <svg class="apple-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <span id="search-query-display" class="apple-search-text empty">Movies, Shows, Cast, and More</span>
+        <input type="text" id="search-input" class="search-hidden-input" autocomplete="off" readonly tabindex="-1">
+      </div>
+
+      <!-- Search Suggestions Bar (Images 2, 3, 4) -->
+      <div id="search-suggestions-bar" class="search-suggestions-bar" style="display: none;">
+        <button id="sugg-pill-1" class="sugg-pill focusable" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sugg-icon">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <span id="sugg-text-1">interstellar</span>
+        </button>
+        <button id="sugg-pill-2" class="sugg-pill focusable" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sugg-icon">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <span id="sugg-text-2">movies from the leading...</span>
+        </button>
+      </div>
+
+      <!-- Category Filter Tabs: [Top Results] [Movies] (Images 2, 3, 4) -->
+      <div id="search-category-tabs" class="search-category-tabs" style="display: none;">
+        <div class="category-tabs-group">
+          <button id="tab-top-results" class="category-tab-pill active focusable" data-tab="top" tabindex="0">Top Results</button>
+          <button id="tab-movies" class="category-tab-pill focusable" data-tab="movies" tabindex="0">Movies</button>
+        </div>
+        <div class="category-tabs-divider"></div>
       </div>
     </header>
 
-    <!-- Left-Side Alphabet Keyboard (4 letters per row, bigger tiles, space & backspace in middle) -->
-    <!-- On-Screen Keyboard (5 Letters Per Row, Auto-Collapsing Glassmorphic Tiles) -->
+    <!-- Apple TV+ On-Screen Keyboard (6 columns x 5 rows + Action Row) -->
     <div id="onscreen-keyboard" class="onscreen-keyboard" aria-label="On-Screen Keyboard">
-      <!-- Row 1: A B C D E -->
-      <div class="kb-row">
-        <button class="kb-tile focusable" data-char="A" tabindex="0">A</button>
-        <button class="kb-tile focusable" data-char="B" tabindex="0">B</button>
-        <button class="kb-tile focusable" data-char="C" tabindex="0">C</button>
-        <button class="kb-tile focusable" data-char="D" tabindex="0">D</button>
-        <button class="kb-tile focusable" data-char="E" tabindex="0">E</button>
+      <!-- Mode Switcher Pill: [ abc | 123 ] -->
+      <div class="kb-mode-switcher">
+        <button id="kb-mode-abc" class="kb-mode-pill active focusable" data-mode="abc" tabindex="0">abc</button>
+        <button id="kb-mode-123" class="kb-mode-pill focusable" data-mode="123" tabindex="0">123</button>
       </div>
 
-      <!-- Row 2: F G H I J -->
-      <div class="kb-row">
-        <button class="kb-tile focusable" data-char="F" tabindex="0">F</button>
-        <button class="kb-tile focusable" data-char="G" tabindex="0">G</button>
-        <button class="kb-tile focusable" data-char="H" tabindex="0">H</button>
-        <button class="kb-tile focusable" data-char="I" tabindex="0">I</button>
-        <button class="kb-tile focusable" data-char="J" tabindex="0">J</button>
+      <!-- Alpha Keys Grid (abc) -->
+      <div id="kb-grid-abc" class="kb-keys-container">
+        <!-- Row 1: a b c d e f -->
+        <div class="kb-row">
+          <button class="kb-key focusable" data-char="a" tabindex="0">a</button>
+          <button class="kb-key focusable" data-char="b" tabindex="0">b</button>
+          <button class="kb-key focusable" data-char="c" tabindex="0">c</button>
+          <button class="kb-key focusable" data-char="d" tabindex="0">d</button>
+          <button class="kb-key focusable" data-char="e" tabindex="0">e</button>
+          <button class="kb-key focusable" data-char="f" tabindex="0">f</button>
+        </div>
+        <!-- Row 2: g h i j k l -->
+        <div class="kb-row">
+          <button class="kb-key focusable" data-char="g" tabindex="0">g</button>
+          <button class="kb-key focusable" data-char="h" tabindex="0">h</button>
+          <button class="kb-key focusable" data-char="i" tabindex="0">i</button>
+          <button class="kb-key focusable" data-char="j" tabindex="0">j</button>
+          <button class="kb-key focusable" data-char="k" tabindex="0">k</button>
+          <button class="kb-key focusable" data-char="l" tabindex="0">l</button>
+        </div>
+        <!-- Row 3: m n o p q r -->
+        <div class="kb-row">
+          <button class="kb-key focusable" data-char="m" tabindex="0">m</button>
+          <button class="kb-key focusable" data-char="n" tabindex="0">n</button>
+          <button class="kb-key focusable" data-char="o" tabindex="0">o</button>
+          <button class="kb-key focusable" data-char="p" tabindex="0">p</button>
+          <button class="kb-key focusable" data-char="q" tabindex="0">q</button>
+          <button class="kb-key focusable" data-char="r" tabindex="0">r</button>
+        </div>
+        <!-- Row 4: s t u v w x -->
+        <div class="kb-row">
+          <button class="kb-key focusable" data-char="s" tabindex="0">s</button>
+          <button class="kb-key focusable" data-char="t" tabindex="0">t</button>
+          <button class="kb-key focusable" data-char="u" tabindex="0">u</button>
+          <button class="kb-key focusable" data-char="v" tabindex="0">v</button>
+          <button class="kb-key focusable" data-char="w" tabindex="0">w</button>
+          <button class="kb-key focusable" data-char="x" tabindex="0">x</button>
+        </div>
+        <!-- Row 5: y z -->
+        <div class="kb-row kb-row-yz">
+          <button class="kb-key focusable" data-char="y" tabindex="0">y</button>
+          <button class="kb-key focusable" data-char="z" tabindex="0">z</button>
+        </div>
+        <!-- Row 6: SPACE [⌫] CLEAR -->
+        <div class="kb-row kb-action-row">
+          <button id="kb-btn-space" class="kb-key kb-key-action kb-key-space focusable" data-action="space" tabindex="0">SPACE</button>
+          <button id="kb-btn-delete" class="kb-key kb-key-action kb-key-backspace focusable" data-action="delete" tabindex="0" title="Backspace">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="kb-backspace-svg">
+              <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
+              <line x1="18" y1="9" x2="12" y2="15"/>
+              <line x1="12" y1="9" x2="18" y2="15"/>
+            </svg>
+          </button>
+          <button id="kb-btn-clear" class="kb-key kb-key-action kb-key-clear focusable" data-action="clear" tabindex="0">CLEAR</button>
+        </div>
       </div>
 
-      <!-- Row 3: K L M N O -->
-      <div class="kb-row">
-        <button class="kb-tile focusable" data-char="K" tabindex="0">K</button>
-        <button class="kb-tile focusable" data-char="L" tabindex="0">L</button>
-        <button class="kb-tile focusable" data-char="M" tabindex="0">M</button>
-        <button class="kb-tile focusable" data-char="N" tabindex="0">N</button>
-        <button class="kb-tile focusable" data-char="O" tabindex="0">O</button>
-      </div>
-
-      <!-- Row 4: P Q R S T -->
-      <div class="kb-row">
-        <button class="kb-tile focusable" data-char="P" tabindex="0">P</button>
-        <button class="kb-tile focusable" data-char="Q" tabindex="0">Q</button>
-        <button class="kb-tile focusable" data-char="R" tabindex="0">R</button>
-        <button class="kb-tile focusable" data-char="S" tabindex="0">S</button>
-        <button class="kb-tile focusable" data-char="T" tabindex="0">T</button>
-      </div>
-
-      <!-- Row 5: U V W X Y -->
-      <div class="kb-row">
-        <button class="kb-tile focusable" data-char="U" tabindex="0">U</button>
-        <button class="kb-tile focusable" data-char="V" tabindex="0">V</button>
-        <button class="kb-tile focusable" data-char="W" tabindex="0">W</button>
-        <button class="kb-tile focusable" data-char="X" tabindex="0">X</button>
-        <button class="kb-tile focusable" data-char="Y" tabindex="0">Y</button>
-      </div>
-
-      <!-- Row 6: Z, Space, Delete (Exact Width Match) -->
-      <div class="kb-row">
-        <button class="kb-tile focusable" data-char="Z" tabindex="0">Z</button>
-        <button id="kb-btn-space" class="kb-tile kb-tile-action focusable" data-action="space" tabindex="0">
-          <span>Space</span>
-        </button>
-        <button id="kb-btn-delete" class="kb-tile kb-tile-action focusable" data-action="delete" tabindex="0" title="Delete">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px;">
-            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
-            <line x1="18" y1="9" x2="12" y2="15"/>
-            <line x1="12" y1="9" x2="18" y2="15"/>
-          </svg>
-        </button>
+      <!-- Numeric / Symbol Keys Grid (123) -->
+      <div id="kb-grid-123" class="kb-keys-container" style="display: none;">
+        <div class="kb-row">
+          <button class="kb-key focusable" data-char="1" tabindex="0">1</button>
+          <button class="kb-key focusable" data-char="2" tabindex="0">2</button>
+          <button class="kb-key focusable" data-char="3" tabindex="0">3</button>
+          <button class="kb-key focusable" data-char="4" tabindex="0">4</button>
+          <button class="kb-key focusable" data-char="5" tabindex="0">5</button>
+          <button class="kb-key focusable" data-char="6" tabindex="0">6</button>
+        </div>
+        <div class="kb-row">
+          <button class="kb-key focusable" data-char="7" tabindex="0">7</button>
+          <button class="kb-key focusable" data-char="8" tabindex="0">8</button>
+          <button class="kb-key focusable" data-char="9" tabindex="0">9</button>
+          <button class="kb-key focusable" data-char="0" tabindex="0">0</button>
+          <button class="kb-key focusable" data-char="-" tabindex="0">-</button>
+          <button class="kb-key focusable" data-char="/" tabindex="0">/</button>
+        </div>
+        <div class="kb-row">
+          <button class="kb-key focusable" data-char=":" tabindex="0">:</button>
+          <button class="kb-key focusable" data-char=";" tabindex="0">;</button>
+          <button class="kb-key focusable" data-char="(" tabindex="0">(</button>
+          <button class="kb-key focusable" data-char=")" tabindex="0">)</button>
+          <button class="kb-key focusable" data-char="$" tabindex="0">$</button>
+          <button class="kb-key focusable" data-char="&amp;" tabindex="0">&amp;</button>
+        </div>
+        <div class="kb-row">
+          <button class="kb-key focusable" data-char="@" tabindex="0">@</button>
+          <button class="kb-key focusable" data-char='"' tabindex="0">"</button>
+          <button class="kb-key focusable" data-char="." tabindex="0">.</button>
+          <button class="kb-key focusable" data-char="," tabindex="0">,</button>
+          <button class="kb-key focusable" data-char="?" tabindex="0">?</button>
+          <button class="kb-key focusable" data-char="!" tabindex="0">!</button>
+        </div>
+        <div class="kb-row kb-row-yz">
+          <button class="kb-key focusable" data-char="'" tabindex="0">'</button>
+          <button class="kb-key focusable" data-char="#" tabindex="0">#</button>
+        </div>
+        <div class="kb-row kb-action-row">
+          <button class="kb-key kb-key-action kb-key-space focusable" data-action="space" tabindex="0">SPACE</button>
+          <button class="kb-key kb-key-action kb-key-backspace focusable" data-action="delete" tabindex="0" title="Backspace">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="kb-backspace-svg">
+              <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
+              <line x1="18" y1="9" x2="12" y2="15"/>
+              <line x1="12" y1="9" x2="18" y2="15"/>
+            </svg>
+          </button>
+          <button class="kb-key kb-key-action kb-key-clear focusable" data-action="clear" tabindex="0">CLEAR</button>
+        </div>
       </div>
     </div>
 
-    <!-- Main Dynamic Media Search Tiles Container -->
+    <!-- Apple TV+ Search Content / Browse / Results Area -->
     <main id="search-results-container" class="search-results-container" aria-label="Search Results">
-      <div id="search-results-grid" class="search-results-grid">
-        <!-- Rendered dynamically from TMDB & TVDB -->
-      </div>
+      <!-- Browse Section (Empty Query State, Image 1) -->
+      <section id="search-browse-section" class="search-browse-section">
+        <div class="browse-header-row">
+          <h2 class="browse-title">Browse</h2>
+          <div class="browse-divider-line"></div>
+        </div>
+        <div id="search-browse-grid" class="search-browse-grid">
+          <!-- Dynamically populated with Ted Lasso, MLS, 4K HDR, Action, Comedy, etc. -->
+        </div>
+      </section>
+
+      <!-- Active Search Results Section (Images 2, 3, 4, 5) -->
+      <section id="search-results-section" class="search-results-section" style="display: none;">
+        <div id="search-results-grid" class="search-results-grid mode-wide">
+          <!-- Dynamically populated with Wide Cards or Poster Cards -->
+        </div>
+
+        <!-- 7-Card Apple TV+ Loading Skeleton Row (Image 5) -->
+        <div id="search-skeleton-loader" class="search-skeleton-loader" style="display: none;">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </section>
     </main>
 
     <!-- Comprehensive Media Details Modal Overlay (Apple TV+ 1:1 Experience) -->

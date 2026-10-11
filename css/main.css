@@ -324,85 +324,258 @@ body.mode-pointer .focusable:hover {
 }
 
 /* --------------------------------------------------------------------------
-   Middle-Top Search Bar
-   Aligned vertically in line with the menu button (top: 24px, height: 56px)
-   Substantially bigger: width 980px, height 56px, font size 22px
+   APPLE TV+ TOP-LEFT PILL BUTTON (< Search) (Images 1-5)
    -------------------------------------------------------------------------- */
 
-.middle-top-search {
+.search-top-bar {
   position: fixed;
-  top: 24px;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-  width: 980px;
-  height: 56px;
-  z-index: 100;
+  top: 26px;
+  left: 44px;
+  z-index: 120;
 }
 
-.search-input-box {
-  display: -webkit-flex;
-  display: flex;
+.search-top-pill {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  -webkit-align-items: center;
   align-items: center;
-  height: 56px;
-  padding: 0 24px;
-  border-radius: 28px;
-  cursor: pointer;
-  position: relative;
-}
-
-body.mode-5way .search-input-box.focused,
-body.mode-pointer .search-input-box:hover {
-  -webkit-transform: scale(1.02) translateZ(0) !important;
-  transform: scale(1.02) translateZ(0) !important;
-}
-
-.search-input-icon {
-  width: 26px;
-  height: 26px;
-  stroke: #8e8e93;
-  margin-right: 18px;
-  flex-shrink: 0;
-}
-
-.search-input-field {
-  width: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 19px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   color: #ffffff;
-  font-size: 22px;
-  font-weight: 500;
-  letter-spacing: -0.3px;
-  cursor: default;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: all 0.30s ease;
+  outline: none;
 }
 
-.search-input-field::placeholder {
-  color: #636366;
+.search-top-chevron {
+  font-size: 20px;
+  line-height: 1;
+  margin-right: 8px;
+  margin-top: -2px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-top-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  stroke: rgba(255, 255, 255, 0.85);
+}
+
+.search-top-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+body.mode-5way .search-top-pill.focused,
+body.mode-pointer .search-top-pill:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
+  -webkit-transform: scale(1.06) translateZ(0);
+  transform: scale(1.06) translateZ(0);
+}
+
+body.mode-5way .search-top-pill.focused .search-top-chevron,
+body.mode-pointer .search-top-pill:hover .search-top-chevron,
+body.mode-5way .search-top-pill.focused .search-top-label,
+body.mode-pointer .search-top-pill:hover .search-top-label {
+  color: #000000 !important;
+}
+
+body.mode-5way .search-top-pill.focused .search-top-icon,
+body.mode-pointer .search-top-pill:hover .search-top-icon {
+  stroke: #000000 !important;
 }
 
 /* --------------------------------------------------------------------------
-   Left-Side Alphabet Keyboard (5 letters per row, collapsible)
-   Engineered for Chromium 53: Uses Flexbox rows & margins (NO CSS Grid, NO flex gap)
+   APPLE TV+ SEARCH HEADER & SUGGESTIONS BAR (Images 1-5)
+   -------------------------------------------------------------------------- */
+
+.apple-search-header {
+  position: fixed;
+  top: 76px;
+  left: 44px;
+  right: 44px;
+  z-index: 110;
+  pointer-events: auto;
+}
+
+.apple-search-input-line {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  height: 48px;
+}
+
+.apple-search-icon {
+  width: 32px;
+  height: 32px;
+  stroke: rgba(255, 255, 255, 0.40);
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.apple-search-text {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.apple-search-text.empty {
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 600;
+}
+
+.search-hidden-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+/* Horizontal Suggestion Pills (Images 2, 3) */
+.search-suggestions-bar {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.sugg-pill {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  -webkit-align-items: center;
+  align-items: center;
+  height: 38px;
+  padding: 0 18px;
+  margin-right: 14px;
+  border-radius: 19px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.90);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: all 0.25s ease;
+}
+
+.sugg-icon {
+  width: 15px;
+  height: 15px;
+  margin-right: 8px;
+  stroke: rgba(255, 255, 255, 0.70);
+  flex-shrink: 0;
+}
+
+/* Solid Bright White Pill with Black Text when Focused (Image 3) */
+body.mode-5way .sugg-pill.focused,
+body.mode-pointer .sugg-pill:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6) !important;
+  -webkit-transform: scale(1.05) translateZ(0);
+  transform: scale(1.05) translateZ(0);
+}
+
+body.mode-5way .sugg-pill.focused .sugg-icon,
+body.mode-pointer .sugg-pill:hover .sugg-icon {
+  stroke: #000000 !important;
+}
+
+/* Category Filter Tabs: [Top Results] [Movies] (Images 2, 3, 4) */
+.search-category-tabs {
+  margin-top: 14px;
+  position: relative;
+}
+
+.category-tabs-group {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.category-tab-pill {
+  padding: 6px 18px;
+  margin-right: 12px;
+  border-radius: 16px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: all 0.25s ease;
+}
+
+.category-tab-pill.active {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+/* Solid White Pill with Black Text when Focused (Image 4) */
+body.mode-5way .category-tab-pill.focused,
+body.mode-pointer .category-tab-pill:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
+  -webkit-transform: scale(1.06) translateZ(0);
+  transform: scale(1.06) translateZ(0);
+}
+
+.category-tabs-divider {
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  margin-top: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   APPLE TV+ ON-SCREEN KEYBOARD (6 Columns x 5 Rows) (Images 1, 2)
    -------------------------------------------------------------------------- */
 
 .onscreen-keyboard {
-  position: absolute;
-  top: 104px;
-  left: 32px;
-  z-index: 50;
+  position: fixed;
+  top: 160px;
+  left: 44px;
+  width: 320px;
+  z-index: 90;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0;
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
-  transition: -webkit-transform 0.46s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.46s cubic-bezier(0.16, 1, 0.3, 1),
+  transition: -webkit-transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
               opacity 0.40s ease;
 }
 
-/* Collapsed into left edge when user moves focus onto media tiles */
+/* Keyboard smoothly collapses left off-screen (Image 3) */
 .onscreen-keyboard.collapsed-left {
   -webkit-transform: translate3d(-380px, 0, 0);
   transform: translate3d(-380px, 0, 0);
@@ -410,135 +583,203 @@ body.mode-pointer .search-input-box:hover {
   pointer-events: none;
 }
 
-/* Flexbox Row Container (5 Letters Per Row) */
-.kb-row {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  margin-bottom: 8px;
+/* Segmented Mode Switcher: [ abc | 123 ] */
+.kb-mode-switcher {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  padding: 2px;
+  margin-bottom: 18px;
 }
 
-.kb-row:last-child {
-  margin-bottom: 0;
-}
-
-/* Individual Glassmorphic Letter Tile (60x60px) */
-.kb-tile {
-  width: 60px;
-  height: 60px;
-  margin-right: 8px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top-color: rgba(255, 255, 255, 0.16);
-  border-left-color: rgba(255, 255, 255, 0.11);
-  background: rgba(22, 22, 26, 0.72);
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.02) 40%,
-    rgba(14, 14, 16, 0.70) 100%
-  );
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
-    0 3px 10px 0 rgba(0, 0, 0, 0.20);
-  color: #f5f5f7;
-  font-size: 22px;
+.kb-mode-pill {
+  padding: 4px 14px;
+  border-radius: 13px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.50);
+  font-size: 13px;
   font-weight: 600;
-  display: -webkit-box;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.kb-mode-pill.active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+body.mode-5way .kb-mode-pill.focused,
+body.mode-pointer .kb-mode-pill:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 6-Column Keys Grid */
+.kb-keys-container {
   display: -webkit-flex;
   display: flex;
-  -webkit-box-align: center;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+
+.kb-row {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.kb-row-yz {
+  display: -webkit-flex;
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.kb-key {
+  width: 36px;
+  height: 38px;
+  margin-right: 14px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: 'SF Pro Rounded', -apple-system, sans-serif;
+  font-size: 21px;
+  font-weight: 500;
+  display: -webkit-flex;
+  display: flex;
   -webkit-align-items: center;
   align-items: center;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
   justify-content: center;
   cursor: pointer;
+  outline: none;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.40s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.35s ease,
-              border-color 0.35s ease,
-              color 0.35s ease;
-  position: relative;
+  transition: -webkit-transform 0.25s ease, background 0.25s ease, color 0.25s ease;
 }
 
-.kb-tile:last-child {
+.kb-key:last-child {
   margin-right: 0;
 }
 
-/* Wide Action Tiles (Space & Delete in Row 6) */
-.kb-tile-action {
-  width: 128px;
-  height: 60px;
-  font-size: 15px;
-  letter-spacing: -0.2px;
+/* Focused Key: Solid Bright White Rounded Rectangle with Black Text (Images 1, 2) */
+body.mode-5way .kb-key.focused,
+body.mode-pointer .kb-key:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.60) !important;
+  -webkit-transform: scale(1.12) translateZ(0);
+  transform: scale(1.12) translateZ(0);
+  z-index: 30;
 }
 
-/* Clean OSK Hover & Focus: Subtle enlargement with NO opaque overlay */
-body.mode-5way .kb-tile.focused,
-body.mode-pointer .kb-tile:hover {
-  outline: none !important;
-  -webkit-transform: scale(1.10) translateZ(0);
-  transform: scale(1.10) translateZ(0);
-  background: rgba(22, 22, 26, 0.72) !important;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.10) 0%,
-    rgba(255, 255, 255, 0.03) 40%,
-    rgba(14, 14, 16, 0.72) 100%
-  ) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
-    0 8px 22px rgba(0, 0, 0, 0.36) !important;
-  color: #ffffff !important;
-  z-index: 30 !important;
+/* Action Keys Row: SPACE [⌫] CLEAR */
+.kb-action-row {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  margin-top: 4px;
 }
 
-.kb-tile:active {
-  -webkit-transform: scale(0.96) translateZ(0);
-  transform: scale(0.96) translateZ(0);
+.kb-key-action {
+  height: 34px;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.kb-key-space {
+  width: 90px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  margin-right: 10px;
+}
+
+.kb-key-backspace {
+  width: 46px;
+  margin-right: 10px;
+}
+
+.kb-backspace-svg {
+  width: 18px;
+  height: 18px;
+  stroke: rgba(255, 255, 255, 0.85);
+}
+
+.kb-key-clear {
+  width: 76px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+body.mode-5way .kb-key-action.focused,
+body.mode-pointer .kb-key-action:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.60) !important;
+  -webkit-transform: scale(1.08) translateZ(0);
+  transform: scale(1.08) translateZ(0);
+  z-index: 30;
+}
+
+body.mode-5way .kb-key-action.focused .kb-backspace-svg,
+body.mode-pointer .kb-key-action:hover .kb-backspace-svg {
+  stroke: #000000 !important;
 }
 
 /* --------------------------------------------------------------------------
-   Dynamic TMDB & TVDB Results Grid: Centered in the middle, scrollbar removed
+   SEARCH CONTENT / RESULTS CONTAINER (Apple TV+ Layout)
    -------------------------------------------------------------------------- */
 
 .search-results-container {
   position: absolute;
-  top: 96px;
+  top: 196px;
   left: 388px;
-  right: 0;
+  right: 44px;
   bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 24px;
   padding-bottom: 80px;
-  padding-left: 20px;
-  padding-right: 40px;
   box-sizing: border-box;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-  transition: left 0.50s cubic-bezier(0.16, 1, 0.3, 1),
-              padding 0.50s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: left 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
 }
 
-/* When on-screen keyboard collapses into left edge, shift tiles back to full width */
-.search-results-container.keyboard-collapsed,
-.search-results-container.expanded-left {
-  left: 0;
-  padding-left: 40px;
-  padding-right: 40px;
+.search-results-container.expanded-left,
+.search-results-container.keyboard-collapsed {
+  left: 44px;
 }
 
-/* Completely remove visible scrollbar from the right and throughout webOS */
 .search-results-container::-webkit-scrollbar,
 ::-webkit-scrollbar {
   display: none !important;
@@ -547,119 +788,315 @@ body.mode-pointer .kb-tile:hover {
   background: transparent !important;
 }
 
-/* Flexbox Wrap Grid centered in the middle */
-.search-results-grid {
-  display: -webkit-box;
+/* --------------------------------------------------------------------------
+   BROWSE SECTION (Empty Query State, Image 1)
+   -------------------------------------------------------------------------- */
+
+.search-browse-section {
+  width: 100%;
+}
+
+.browse-header-row {
+  margin-bottom: 16px;
+}
+
+.browse-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+  margin: 0 0 10px 0;
+}
+
+.browse-divider-line {
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.search-browse-grid {
   display: -webkit-flex;
   display: flex;
   -webkit-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  margin: 0 auto;
-  max-width: 1760px;
 }
 
-/* Individual Movie / TV Show Tile: Pure Cover Poster (No titles/content on tile) */
-.media-tile {
-  width: 220px;
-  height: 330px;
-  margin: 12px;
-  border-radius: 22px;
+.browse-card {
+  width: 195px;
+  height: 290px;
+  margin: 10px;
+  border-radius: 18px;
+  position: relative;
   overflow: hidden;
   cursor: pointer;
-  position: relative;
-  background-color: #18181e;
+  background: #1c1c20;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.40);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-  -webkit-transform-origin: center center;
-  transform-origin: center center;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transition: -webkit-transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.35s ease;
+  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.30s ease;
+  outline: none;
 }
 
-/* Flawless Poster Focus & Hover: Generous container padding prevents top/edge clipping */
-body.mode-5way .media-tile.focused,
-body.mode-pointer .media-tile:hover {
-  outline: none !important;
-  -webkit-transform: scale(1.08) translateZ(0);
-  transform: scale(1.08) translateZ(0);
-  border-color: rgba(255, 255, 255, 0.70) !important;
-  box-shadow:
-    0 20px 48px rgba(0, 0, 0, 0.75),
-    0 0 0 2.5px rgba(255, 255, 255, 0.75) !important;
+body.mode-5way .browse-card.focused,
+body.mode-pointer .browse-card:hover {
+  -webkit-transform: scale(1.08) translateZ(0) !important;
+  transform: scale(1.08) translateZ(0) !important;
+  border-color: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85) !important;
   z-index: 50 !important;
 }
 
-.tile-poster {
+.browse-card-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: 21px;
 }
 
-.tile-poster-placeholder {
+.browse-card-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.10) 40%, transparent 100%);
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: flex-end;
+  align-items: flex-end;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.browse-card-title {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.browse-card-badge {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  height: 24px;
+}
+
+/* --------------------------------------------------------------------------
+   SEARCH RESULTS GRID (Wide Cards vs Vertical Poster Cards)
+   -------------------------------------------------------------------------- */
+
+.search-results-section {
+  width: 100%;
+}
+
+.search-results-grid {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* Mode Wide: Horizontal Cards for Top Results (Images 2, 3) */
+.media-card-wide {
+  width: 440px;
+  height: 105px;
+  margin: 8px 10px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  padding: 8px 14px;
+  box-sizing: border-box;
+  cursor: pointer;
+  outline: none;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: -webkit-transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.30s ease,
+              border-color 0.30s ease,
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 2 columns when OSK is open, 3 columns when collapsed */
+.search-results-container:not(.expanded-left) .media-card-wide {
+  width: 48%;
+  max-width: 460px;
+}
+
+.search-results-container.expanded-left .media-card-wide {
+  width: 31.5%;
+  max-width: 480px;
+}
+
+body.mode-5way .media-card-wide.focused,
+body.mode-pointer .media-card-wide:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.50) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.70) !important;
+  -webkit-transform: scale(1.04) translateZ(0) !important;
+  transform: scale(1.04) translateZ(0) !important;
+  z-index: 40 !important;
+}
+
+.wide-poster-thumb {
+  width: 60px;
+  height: 88px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  margin-right: 16px;
+  background-color: #242429;
+}
+
+.wide-card-info {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.wide-card-title {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.wide-card-meta {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mode Poster: 2:3 Vertical Cards for Movies Tab (Images 4, 5) */
+.media-card-poster {
+  width: 190px;
+  height: 285px;
+  margin: 12px;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #1c1c20;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: -webkit-transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.30s ease;
+  outline: none;
+}
+
+.poster-card-img {
   width: 100%;
   height: 100%;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #1e1e24 0%, #121215 100%);
-  color: #8e8e93;
-  padding: 20px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Focused Poster (Image 5 — The Martian focused with bottom subtitle) */
+body.mode-5way .media-card-poster.focused,
+body.mode-pointer .media-card-poster:hover {
+  -webkit-transform: scale(1.08) translateZ(0) !important;
+  transform: scale(1.08) translateZ(0) !important;
+  border-color: rgba(255, 255, 255, 0.85) !important;
+  border-width: 2px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85) !important;
+  z-index: 50 !important;
+}
+
+.poster-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 14px 10px 10px 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.60) 60%, transparent 100%);
   text-align: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
-.placeholder-icon {
-  font-size: 38px;
-  margin-bottom: 8px;
+body.mode-5way .media-card-poster.focused .poster-card-overlay,
+body.mode-pointer .media-card-poster:hover .poster-card-overlay {
+  opacity: 1;
 }
 
-.placeholder-text {
-  font-size: 14px;
-  font-weight: 500;
-  color: #a1a1aa;
+.poster-card-subtitle {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
 }
 
-/* State Messages (Loading, Empty, Error) */
-.results-state-msg {
-  width: 100%;
-  padding: 80px 0;
+/* --------------------------------------------------------------------------
+   APPLE TV+ 7-CARD SKELETON LOADING SHIMMER ANIMATION (Image 5)
+   -------------------------------------------------------------------------- */
+
+.search-skeleton-loader {
   display: -webkit-flex;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #8e8e93;
-  font-size: 18px;
-  gap: 16px;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 8px;
 }
 
-.spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid rgba(255, 255, 255, 0.15);
-  border-top-color: #ffffff;
-  border-radius: 50%;
-  -webkit-animation: spin 0.8s linear infinite;
-  animation: spin 0.8s linear infinite;
+.skeleton-card {
+  width: 190px;
+  height: 285px;
+  margin: 12px;
+  border-radius: 16px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.30);
+  -webkit-animation: appleSkeletonShimmer 1.8s infinite ease-in-out;
+  animation: appleSkeletonShimmer 1.8s infinite ease-in-out;
 }
 
-@-webkit-keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+@-webkit-keyframes appleSkeletonShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
-@keyframes spin {
-  to { transform: rotate(360deg); }
+
+@keyframes appleSkeletonShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .state-icon {

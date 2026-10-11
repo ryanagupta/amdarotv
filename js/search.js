@@ -1,6 +1,11 @@
 /**
  * Media Search & Discovery Engine for webOS 4.0 (Chromium 53)
- * Integrates TMDB (Movies & TV) and TVDB
+ * Exact 1:1 Apple TV+ Search Experience
+ * - Empty State: Curated Browse Grid (Ted Lasso, MLS, 4K HDR, Action, Comedy...)
+ * - Search State: Dynamic Suggestions Bar, Category Tabs (Top Results vs Movies)
+ * - Top Results Tab: Wide Horizontal Glass Cards
+ * - Movies Tab: Apple TV+ 2:3 Vertical Posters with Focused Subtitle
+ * - Apple TV+ 7-Card Loading Skeleton Shimmer Animation
  * TMDB API Key: 1dbff444724afdb19b4bf5e8cc1c98b8
  * TVDB API Key: 7dceeb2b-1e71-4d2f-8227-d6b1d628aab3
  */
@@ -12,90 +17,379 @@ var MediaSearch = (function () {
   var TVDB_KEY = '7dceeb2b-1e71-4d2f-8227-d6b1d628aab3';
   var TMDB_IMG_BASE = 'https://image.tmdb.org/t/p/w500';
   var TMDB_BACKDROP_BASE = 'https://image.tmdb.org/t/p/original';
-  var STREMIO_BASE = 'https://aiostreams.elfhosted.com/stremio/f7e141bd-d649-45de-bc9f-74ffa42a3436/eyJpIjoidVF6cVhJS1Q3V2dYOTNUT1J3UmpIQT09IiwiZSI6ImdEYjNHdFVtQjF0Mi9OeVF0UVc4RzNhZ09wSG1odnZzUnhmT01uZFoyV009IiwidCI6ImEifQ';
 
-  var resultsContainer = null;
-  var detailsModal = null;
   var searchInput = null;
-  var searchTimeout = null;
+  var searchDisplay = null;
+  var suggestionsBar = null;
+  var sugg1 = null;
+  var sugg1Text = null;
+  var sugg2 = null;
+  var sugg2Text = null;
+  var categoryTabs = null;
+  var tabTop = null;
+  var tabMovies = null;
+  var browseSection = null;
+  var browseGrid = null;
+  var resultsSection = null;
+  var resultsGrid = null;
+  var skeletonLoader = null;
+  var topBackPill = null;
+
   var currentQuery = '';
-  var isModalOpen = false;
-  var lastSelectedTile = null;
+  var currentTab = 'top'; // 'top' or 'movies'
+  var searchTimeout = null;
+  var currentItemsList = [];
+  var currentGenreFilter = null;
+
+  var GENRES = {
+    28: 'Action',
+    12: 'Adventure',
+    16: 'Animation',
+    35: 'Comedy',
+    80: 'Crime',
+    99: 'Documentary',
+    18: 'Drama',
+    10751: 'Family',
+    14: 'Fantasy',
+    36: 'History',
+    27: 'Horror',
+    10402: 'Music',
+    9648: 'Mystery',
+    10749: 'Romance',
+    878: 'Sci-Fi',
+    10770: 'TV Movie',
+    53: 'Thriller',
+    10752: 'War',
+    37: 'Western',
+    10759: 'Action & Adventure',
+    10765: 'Sci-Fi & Fantasy'
+  };
 
   function init() {
-    resultsContainer = document.getElementById('search-results-grid');
-    detailsModal = document.getElementById('media-details-modal');
     searchInput = document.getElementById('search-input');
+    searchDisplay = document.getElementById('search-query-display');
+    suggestionsBar = document.getElementById('search-suggestions-bar');
+    sugg1 = document.getElementById('sugg-pill-1');
+    sugg1Text = document.getElementById('sugg-text-1');
+    sugg2 = document.getElementById('sugg-pill-2');
+    sugg2Text = document.getElementById('sugg-text-2');
+    categoryTabs = document.getElementById('search-category-tabs');
+    tabTop = document.getElementById('tab-top-results');
+    tabMovies = document.getElementById('tab-movies');
+    browseSection = document.getElementById('search-browse-section');
+    browseGrid = document.getElementById('search-browse-grid');
+    resultsSection = document.getElementById('search-results-section');
+    resultsGrid = document.getElementById('search-results-grid');
+    skeletonLoader = document.getElementById('search-skeleton-loader');
+    topBackPill = document.getElementById('search-top-pill');
 
-    if (!resultsContainer) return;
-
-    // Listen to input changes from OSK or remote
+    // Input event from OSK
     if (searchInput) {
       searchInput.addEventListener('input', function () {
-        var query = searchInput.value.trim();
-        if (query !== currentQuery) {
-          currentQuery = query;
-          clearTimeout(searchTimeout);
-          searchTimeout = setTimeout(function () {
-            performSearch(currentQuery);
-          }, 350);
+        var q = searchInput.value.trim();
+        onQueryChanged(q);
+      });
+    }
+
+    // Top-Left Pill (< Search)
+    if (topBackPill) {
+      topBackPill.addEventListener('click', function () {
+        resetSearch();
+      });
+    }
+
+    // Category Tabs
+    if (tabTop) {
+      tabTop.addEventListener('click', function () {
+        switchTab('top');
+      });
+    }
+    if (tabMovies) {
+      tabMovies.addEventListener('click', function () {
+        switchTab('movies');
+      });
+    }
+
+    // Suggestions Pills
+    if (sugg1) {
+      sugg1.addEventListener('click', function () {
+        if (sugg1Text && sugg1Text.textContent) {
+          applyQuery(sugg1Text.textContent);
+        }
+      });
+    }
+    if (sugg2) {
+      sugg2.addEventListener('click', function () {
+        if (sugg2Text && sugg2Text.textContent) {
+          applyQuery(sugg2Text.textContent);
         }
       });
     }
 
-    // Modal close button
-    var modalCloseBtn = document.getElementById('modal-close-btn');
-    if (modalCloseBtn) {
-      modalCloseBtn.addEventListener('click', function () {
-        closeDetails();
-      });
-    }
+    // Build the initial Browse grid (Image 1)
+    renderBrowseGrid();
 
-    // Register Back button (webOS 461) to close modal
-    if (window.MagicRemote && typeof window.MagicRemote.pushBackHandler === 'function') {
-      window.MagicRemote.pushBackHandler(function () {
-        if (isModalOpen) {
-          closeDetails();
-          return true; // handled
-        }
-        return false;
-      });
-    }
-
-    // Initial load: trending popular titles
-    loadTrending();
-
-    console.log('[Search] MediaSearch initialized with TMDB & TVDB.');
+    console.log('[Search] MediaSearch Apple TV+ replica initialized.');
   }
 
-  /**
-   * Load trending movies & shows on launch so dead space is filled
-   */
-  function loadTrending() {
-    renderLoading('Discovering trending movies & shows...');
+  function resetSearch() {
+    if (window.OnScreenKeyboard) {
+      window.OnScreenKeyboard.clearText();
+      window.OnScreenKeyboard.expandFromLeft();
+    }
+    onQueryChanged('');
+    if (window.MagicRemote) {
+      var firstKey = document.querySelector('#onscreen-keyboard .kb-key');
+      if (firstKey) window.MagicRemote.setFocus(firstKey);
+    }
+  }
 
-    var url = 'https://api.themoviedb.org/3/trending/all/day?api_key=' + TMDB_KEY;
-    fetchJSON(url, function (err, data) {
-      if (err || !data || !data.results) {
-        renderError('Unable to load trending titles. Check internet connection.');
-        return;
+  function applyQuery(query) {
+    if (window.OnScreenKeyboard) {
+      window.OnScreenKeyboard.setText(query);
+    } else if (searchInput) {
+      searchInput.value = query;
+    }
+    onQueryChanged(query);
+  }
+
+  function onQueryChanged(q) {
+    currentQuery = q;
+    currentGenreFilter = null;
+
+    if (!q) {
+      // Empty query state (Image 1)
+      if (searchDisplay) {
+        searchDisplay.textContent = 'Movies, Shows, Cast, and More';
+        searchDisplay.classList.add('empty');
       }
-      var items = normalizeResults(data.results);
-      renderResults(items);
-    });
-  }
-
-  /**
-   * Search Movies (TMDB) & TV Shows (TMDB/TVDB)
-   */
-  function performSearch(query) {
-    if (!query) {
-      loadTrending();
+      if (suggestionsBar) suggestionsBar.style.display = 'none';
+      if (categoryTabs) categoryTabs.style.display = 'none';
+      if (resultsSection) resultsSection.style.display = 'none';
+      if (browseSection) browseSection.style.display = 'block';
+      if (skeletonLoader) skeletonLoader.style.display = 'none';
       return;
     }
 
-    renderLoading('Searching for "' + escapeHTML(query) + '"...');
+    // Active query state (Images 2, 3, 4)
+    if (searchDisplay) {
+      searchDisplay.textContent = q;
+      searchDisplay.classList.remove('empty');
+    }
 
+    // Update suggestions pills
+    if (suggestionsBar) {
+      suggestionsBar.style.display = 'flex';
+      if (sugg1Text) sugg1Text.textContent = q;
+      if (sugg2Text) sugg2Text.textContent = 'movies from ' + q;
+    }
+
+    // Show category tabs
+    if (categoryTabs) {
+      categoryTabs.style.display = 'block';
+    }
+
+    // Hide browse, show results
+    if (browseSection) browseSection.style.display = 'none';
+    if (resultsSection) resultsSection.style.display = 'block';
+
+    // Show skeleton shimmer loading animation (Image 5)
+    showSkeleton(true);
+
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(function () {
+      executeSearch(q);
+    }, 320);
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    if (tab === 'movies') {
+      if (tabTop) tabTop.classList.remove('active');
+      if (tabMovies) tabMovies.classList.add('active');
+    } else {
+      if (tabMovies) tabMovies.classList.remove('active');
+      if (tabTop) tabTop.classList.add('active');
+    }
+
+    // Re-render results in new tab layout
+    renderResults(currentItemsList);
+  }
+
+  function showSkeleton(show) {
+    if (!skeletonLoader) return;
+    skeletonLoader.style.display = show ? 'flex' : 'none';
+  }
+
+  /**
+   * Render Curated Apple TV+ Browse Section (Image 1)
+   */
+  function renderBrowseGrid() {
+    if (!browseGrid) return;
+    browseGrid.innerHTML = '';
+
+    var browseItems = [
+      {
+        id: 'ted_lasso',
+        title: 'Ted Lasso',
+        image: 'https://image.tmdb.org/t/p/w500/5fhZdwPmsUm9y0RkC775y1b4mF4.jpg',
+        badge: 'icons/apple_tv_logo.svg',
+        type: 'featured',
+        mediaType: 'tv',
+        tmdbId: 97546
+      },
+      {
+        id: 'mls',
+        title: 'MLS Season Pass',
+        image: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
+        badge: 'icons/mls_crest.svg',
+        type: 'featured'
+      },
+      {
+        id: '4k_hdr',
+        title: '4K HDR',
+        isGradient: true,
+        gradientCss: 'linear-gradient(135deg, #1d63ff 0%, #a429b9 50%, #e60067 100%)',
+        type: 'collection'
+      },
+      {
+        id: 'action',
+        title: 'Action',
+        image: 'https://image.tmdb.org/t/p/w500/wRnbWt44nKjs3nsLIIwknvJN54Y.jpg',
+        genreId: 28,
+        type: 'genre'
+      },
+      {
+        id: 'comedy',
+        title: 'Comedy',
+        image: 'https://image.tmdb.org/t/p/w500/eU0b6F93P6bS55B810WqC9o2K4k.jpg',
+        genreId: 35,
+        type: 'genre'
+      },
+      {
+        id: 'scifi',
+        title: 'Sci-Fi',
+        image: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
+        genreId: 878,
+        type: 'genre'
+      },
+      {
+        id: 'horror',
+        title: 'Horror',
+        image: 'https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg',
+        genreId: 27,
+        type: 'genre'
+      },
+      {
+        id: 'animation',
+        title: 'Animation',
+        image: 'https://image.tmdb.org/t/p/w500/kDp1vUBnMpe8ak4rjgl3cLELqjU.jpg',
+        genreId: 16,
+        type: 'genre'
+      },
+      {
+        id: 'drama',
+        title: 'Drama',
+        image: 'https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
+        genreId: 18,
+        type: 'genre'
+      },
+      {
+        id: 'family',
+        title: 'Kids & Family',
+        image: 'https://image.tmdb.org/t/p/w500/2CAL2433ZeIihfX1Hb2139CX0pW.jpg',
+        genreId: 10751,
+        type: 'genre'
+      }
+    ];
+
+    for (var i = 0; i < browseItems.length; i++) {
+      var item = browseItems[i];
+      var card = createBrowseCard(item);
+      browseGrid.appendChild(card);
+    }
+  }
+
+  function createBrowseCard(item) {
+    var card = document.createElement('div');
+    card.className = 'browse-card focusable';
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', item.title);
+
+    if (item.isGradient) {
+      card.style.background = item.gradientCss;
+      card.innerHTML =
+        '<div class="browse-card-gradient">' +
+          '<div class="browse-card-title" style="font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">' + escapeHTML(item.title) + '</div>' +
+        '</div>';
+    } else {
+      var badgeHtml = item.badge
+        ? '<img class="browse-card-badge" src="' + item.badge + '" alt="Badge">'
+        : '<div class="browse-card-title">' + escapeHTML(item.title) + '</div>';
+
+      card.innerHTML =
+        '<img class="browse-card-image" src="' + item.image + '" alt="' + escapeHTML(item.title) + '" loading="lazy">' +
+        '<div class="browse-card-gradient">' +
+          badgeHtml +
+        '</div>';
+    }
+
+    card.addEventListener('click', function () {
+      if (item.id === 'ted_lasso') {
+        // Open Ted Lasso in the 5-stage Apple TV+ detail modal
+        fetchItemDetails('tv', item.tmdbId, function (err, details) {
+          if (!err && details && window.DetailView) {
+            DetailView.open(details, [details], 0);
+          }
+        });
+      } else if (item.genreId) {
+        // Filter by genre
+        applyQuery(item.title);
+      } else {
+        applyQuery(item.title);
+      }
+    });
+
+    return card;
+  }
+
+  function fetchItemDetails(type, id, cb) {
+    var url = 'https://api.themoviedb.org/3/' + type + '/' + id + '?api_key=' + TMDB_KEY;
+    fetchJSON(url, function (err, data) {
+      if (err || !data) {
+        cb(err);
+        return;
+      }
+      var norm = normalizeSingleItem(data, type);
+      cb(null, norm);
+    });
+  }
+
+  function normalizeSingleItem(item, type) {
+    var title = item.title || item.name || item.original_title || 'Untitled';
+    var releaseDate = item.release_date || item.first_air_date || '';
+    var year = releaseDate ? releaseDate.substring(0, 4) : '';
+    var genres = (item.genres || []).map(function (g) { return g.name; }).slice(0, 2).join(' • ');
+
+    return {
+      id: item.id,
+      mediaType: type,
+      title: title,
+      year: year,
+      rating: item.vote_average ? item.vote_average.toFixed(1) : '8.2',
+      poster: item.poster_path ? (TMDB_IMG_BASE + item.poster_path) : null,
+      backdrop: item.backdrop_path ? (TMDB_BACKDROP_BASE + item.backdrop_path) : null,
+      overview: item.overview || '',
+      genres: genres || 'Comedy',
+      voteCount: item.vote_count || 120
+    };
+  }
+
+  /**
+   * Execute TMDB query
+   */
+  function executeSearch(query) {
     var encoded = encodeURIComponent(query);
     var movieUrl = 'https://api.themoviedb.org/3/search/movie?api_key=' + TMDB_KEY + '&query=' + encoded;
     var tvUrl = 'https://api.themoviedb.org/3/search/tv?api_key=' + TMDB_KEY + '&query=' + encoded;
@@ -106,19 +400,18 @@ var MediaSearch = (function () {
     function checkDone() {
       pending--;
       if (pending === 0) {
-        if (allItems.length === 0) {
-          renderEmpty('No results found for "' + escapeHTML(query) + '"');
-        } else {
-          // Sort by popularity
-          allItems.sort(function (a, b) {
-            return (b.popularity || 0) - (a.popularity || 0);
-          });
-          renderResults(allItems);
-        }
+        showSkeleton(false);
+
+        // Sort by popularity
+        allItems.sort(function (a, b) {
+          return (b.popularity || 0) - (a.popularity || 0);
+        });
+
+        currentItemsList = allItems;
+        renderResults(allItems);
       }
     }
 
-    // Search Movies
     fetchJSON(movieUrl, function (err, data) {
       if (!err && data && data.results) {
         var movies = normalizeResults(data.results, 'movie');
@@ -127,7 +420,6 @@ var MediaSearch = (function () {
       checkDone();
     });
 
-    // Search TV Shows
     fetchJSON(tvUrl, function (err, data) {
       if (!err && data && data.results) {
         var shows = normalizeResults(data.results, 'tv');
@@ -137,9 +429,6 @@ var MediaSearch = (function () {
     });
   }
 
-  /**
-   * Normalize TMDB and TV data into unified structure
-   */
   function normalizeResults(rawList, forcedType) {
     var out = [];
     for (var i = 0; i < rawList.length; i++) {
@@ -154,6 +443,15 @@ var MediaSearch = (function () {
       var poster = item.poster_path ? (TMDB_IMG_BASE + item.poster_path) : null;
       var backdrop = item.backdrop_path ? (TMDB_BACKDROP_BASE + item.backdrop_path) : poster;
 
+      var genreIds = item.genre_ids || [];
+      var genreNames = [];
+      for (var g = 0; g < genreIds.length && genreNames.length < 2; g++) {
+        if (GENRES[genreIds[g]]) {
+          genreNames.push(GENRES[genreIds[g]]);
+        }
+      }
+      var genreString = genreNames.join(' • ');
+
       out.push({
         id: item.id,
         mediaType: mediaType,
@@ -164,310 +462,115 @@ var MediaSearch = (function () {
         backdrop: backdrop,
         overview: item.overview || 'No overview available.',
         popularity: item.popularity || 0,
-        voteCount: item.vote_count || 0
+        voteCount: item.vote_count || 0,
+        genreString: genreString || (mediaType === 'tv' ? 'Series' : 'Sci-Fi')
       });
     }
     return out;
   }
 
-  var currentItemsList = [];
-
   /**
-   * Render tiles into results grid
+   * Render results based on current tab:
+   * - 'top': Wide Horizontal Cards (Images 2, 3)
+   * - 'movies': 2:3 Vertical Posters with Focused Subtitle (Images 4, 5)
    */
   function renderResults(items) {
-    if (!resultsContainer) return;
-    resultsContainer.innerHTML = '';
-    currentItemsList = items || [];
+    if (!resultsGrid) return;
+    resultsGrid.innerHTML = '';
 
-    for (var i = 0; i < currentItemsList.length; i++) {
-      var item = currentItemsList[i];
-      var card = createCardElement(item, i);
-      resultsContainer.appendChild(card);
+    if (!items || items.length === 0) {
+      resultsGrid.innerHTML =
+        '<div style="padding: 60px 20px; color: rgba(255, 255, 255, 0.5); font-size: 18px;">' +
+          'No results found for "' + escapeHTML(currentQuery) + '".' +
+        '</div>';
+      return;
+    }
+
+    var filteredItems = items;
+    if (currentTab === 'movies') {
+      filteredItems = items.filter(function (it) {
+        return it.mediaType === 'movie';
+      });
+      if (filteredItems.length === 0) filteredItems = items;
+    }
+
+    if (currentTab === 'top') {
+      // Wide Horizontal Cards (Images 2 & 3)
+      for (var i = 0; i < filteredItems.length; i++) {
+        var card = createWideCard(filteredItems[i], i, filteredItems);
+        resultsGrid.appendChild(card);
+      }
+    } else {
+      // 2:3 Vertical Poster Cards (Images 4 & 5)
+      for (var j = 0; j < filteredItems.length; j++) {
+        var posterCard = createPosterCard(filteredItems[j], j, filteredItems);
+        resultsGrid.appendChild(posterCard);
+      }
     }
   }
 
-  function createCardElement(item, index) {
+  /**
+   * Wide Horizontal Glass Card (Images 2 & 3)
+   */
+  function createWideCard(item, index, list) {
     var card = document.createElement('div');
-    card.className = 'media-tile focusable';
+    card.className = 'media-card-wide focusable';
     card.tabIndex = 0;
     card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', item.title + (item.year ? ' (' + item.year + ')' : ''));
+    card.setAttribute('aria-label', item.title);
 
-    var posterHtml = item.poster
-      ? '<img class="tile-poster" src="' + item.poster + '" alt="' + escapeHTML(item.title) + '" loading="lazy">'
-      : '<div class="tile-poster-placeholder"><span class="placeholder-icon">🎬</span><span class="placeholder-text">' + escapeHTML(item.title) + '</span></div>';
+    var typeLabel = item.mediaType === 'tv' ? 'TV Show' : 'Movie';
+    var subtitleParts = [typeLabel];
+    if (item.genreString) subtitleParts.push(item.genreString);
+    if (item.year) subtitleParts.push(item.year);
+    var subtitle = subtitleParts.join(' • ');
 
-    // Pure tile cover image: No titles underneath, no content on the tile
-    card.innerHTML = posterHtml;
+    var posterSrc = item.poster || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>';
+
+    card.innerHTML =
+      '<img class="wide-poster-thumb" src="' + posterSrc + '" alt="' + escapeHTML(item.title) + '" loading="lazy">' +
+      '<div class="wide-card-info">' +
+        '<div class="wide-card-title">' + escapeHTML(item.title) + '</div>' +
+        '<div class="wide-card-meta">' + escapeHTML(subtitle) + '</div>' +
+      '</div>';
 
     card.addEventListener('click', function () {
-      lastSelectedTile = card;
       if (window.DetailView) {
-        DetailView.open(item, currentItemsList, index);
-      } else {
-        openDetails(item);
+        DetailView.open(item, list, index);
       }
     });
 
     return card;
   }
 
-  function parseStreamInfo(stream) {
-    var rawTitle = (stream.title || stream.description || '') + ' ' + (stream.name || '');
-    var quality = '1080P';
-    if (/4k|2160p|uhd/i.test(rawTitle)) {
-      quality = '4K UHD';
-    } else if (/1080p|fhd/i.test(rawTitle)) {
-      quality = '1080P HD';
-    } else if (/720p|hd/i.test(rawTitle)) {
-      quality = '720P HD';
-    }
-
-    var provider = 'Direct';
-    if (/\[rd\+\]|realdebrid|real-debrid/i.test(rawTitle)) {
-      provider = '⚡ Real-Debrid';
-    } else if (/torrentio/i.test(rawTitle)) {
-      provider = 'Torrentio';
-    } else if (/aiostreams/i.test(rawTitle)) {
-      provider = 'AIOStreams';
-    }
-
-    var audio = '';
-    if (/atmos/i.test(rawTitle)) audio = 'Dolby Atmos';
-    else if (/dts-hd|dts/i.test(rawTitle)) audio = 'DTS-HD';
-    else if (/ddp|eac3|5\.1/i.test(rawTitle)) audio = '5.1 Audio';
-
-    var sizeMatch = rawTitle.match(/([0-9]+(?:\.[0-9]+)?\s*(?:GB|MB))/i);
-    var size = sizeMatch ? sizeMatch[1].toUpperCase() : '';
-
-    var metaDetails = [provider, audio, size].filter(Boolean).join(' • ');
-
-    return {
-      quality: quality,
-      provider: provider,
-      details: metaDetails || (stream.name || 'High Speed Stream')
-    };
-  }
-
   /**
-   * Fetch and display detailed metadata & actor cast
+   * 2:3 Vertical Poster Card with Bottom Overlay on Focus (Images 4 & 5)
    */
-  function openDetails(item) {
-    if (window.DetailView) {
-      var idx = currentItemsList.indexOf(item);
-      DetailView.open(item, currentItemsList, idx >= 0 ? idx : 0);
-      return;
-    }
-    if (!detailsModal) return;
-    isModalOpen = true;
-    detailsModal.setAttribute('aria-hidden', 'false');
+  function createPosterCard(item, index, list) {
+    var card = document.createElement('div');
+    card.className = 'media-card-poster focusable';
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', item.title);
 
-    var backdropEl = document.getElementById('modal-backdrop-img');
-    var posterEl = document.getElementById('modal-poster-img');
-    var titleEl = document.getElementById('modal-title');
-    var metaEl = document.getElementById('modal-meta-strip');
-    var overviewEl = document.getElementById('modal-overview');
-    var castGridEl = document.getElementById('modal-cast-grid');
-    var playBtn = document.getElementById('modal-play-btn');
-    var playText = document.getElementById('modal-play-text');
-    var streamSelector = document.getElementById('modal-stream-selector');
-    var streamList = document.getElementById('modal-stream-list');
-    var streamCloseBtn = document.getElementById('modal-stream-close-btn');
+    var typeLabel = item.mediaType === 'tv' ? 'TV Show' : 'Movie';
+    var subtitle = typeLabel + (item.genreString ? (' • ' + item.genreString) : '');
 
-    if (backdropEl) backdropEl.style.backgroundImage = item.backdrop ? 'url(' + item.backdrop + ')' : 'none';
-    if (posterEl) posterEl.src = item.poster || '';
-    if (titleEl) titleEl.textContent = item.title;
-    if (overviewEl) overviewEl.textContent = item.overview;
+    var posterSrc = item.poster || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>';
 
-    var typeText = item.mediaType === 'tv' ? 'TV Series' : 'Movie';
-    var ratingText = item.rating ? '★ ' + item.rating + ' (' + item.voteCount + ' votes)' : '';
-    if (metaEl) {
-      metaEl.innerHTML =
-        '<span class="meta-pill type">' + typeText + '</span>' +
-        (item.year ? '<span class="meta-pill year">' + item.year + '</span>' : '') +
-        (ratingText ? '<span class="meta-pill rating">' + ratingText + '</span>' : '');
-    }
+    card.innerHTML =
+      '<img class="poster-card-img" src="' + posterSrc + '" alt="' + escapeHTML(item.title) + '" loading="lazy">' +
+      '<div class="poster-card-overlay">' +
+        '<div class="poster-card-subtitle">' + escapeHTML(subtitle) + '</div>' +
+      '</div>';
 
-    if (castGridEl) {
-      castGridEl.innerHTML = '<div class="loading-cast">Loading cast & actor info...</div>';
-    }
-
-    if (streamSelector) {
-      streamSelector.style.display = 'none';
-    }
-    if (playText) {
-      playText.textContent = 'Play Now';
-    }
-
-    if (streamCloseBtn) {
-      streamCloseBtn.onclick = function () {
-        if (streamSelector) streamSelector.style.display = 'none';
-        if (playBtn && window.MagicRemote) {
-          window.MagicRemote.setFocus(playBtn);
-        }
-      };
-    }
-
-    // Hook up Stremio Add-on Playback
-    if (playBtn) {
-      playBtn.onclick = function () {
-        if (playText) playText.textContent = 'Finding Streams...';
-        playBtn.setAttribute('disabled', 'true');
-
-        var stremioType = item.mediaType === 'tv' ? 'series' : 'movie';
-        var stremioId = item.mediaType === 'tv' ? ('tmdb:' + item.id + ':1:1') : ('tmdb:' + item.id);
-        var stremioUrl = STREMIO_BASE + '/stream/' + stremioType + '/' + stremioId + '.json';
-
-        fetchJSON(stremioUrl, function (err, data) {
-          playBtn.removeAttribute('disabled');
-          if (playText) playText.textContent = 'Play Now';
-
-          if (err || !data || !data.streams || data.streams.length === 0) {
-            alert('No streams found for this title.');
-            return;
-          }
-
-          var streams = data.streams;
-
-          // If stream selector sheet exists, populate and display it
-          if (streamSelector && streamList) {
-            streamList.innerHTML = '';
-            streamSelector.style.display = 'block';
-
-            var count = Math.min(streams.length, 6);
-            for (var s = 0; s < count; s++) {
-              (function (st) {
-                var info = parseStreamInfo(st);
-
-                var card = document.createElement('button');
-                card.className = 'stream-card-btn focusable';
-                card.tabIndex = 0;
-
-                card.innerHTML =
-                  '<div class="stream-card-left">' +
-                    '<span class="stream-card-quality">' + escapeHTML(info.quality) + '</span>' +
-                    '<span class="stream-card-details">' + escapeHTML(info.details) + '</span>' +
-                  '</div>' +
-                  '<div class="stream-card-right">' +
-                    '<span class="stream-play-pill">Play <svg viewBox="0 0 24 24" fill="currentColor" style="width: 12px; height: 12px; margin-left: 4px;"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>' +
-                  '</div>';
-
-                card.addEventListener('click', function () {
-                  if (window.StreamPlayer) {
-                    window.StreamPlayer.load(st.url, { title: item.title, quality: info.quality });
-                    window.StreamPlayer.play();
-                  }
-                });
-
-                streamList.appendChild(card);
-              })(streams[s]);
-            }
-
-            var firstBtn = streamList.querySelector('.stream-card-btn');
-            if (firstBtn && window.MagicRemote) {
-              window.MagicRemote.setFocus(firstBtn);
-            }
-          } else {
-            // Direct auto-play first stream
-            if (window.StreamPlayer) {
-              window.StreamPlayer.load(streams[0].url, { title: item.title, quality: streams[0].name || '1080P' });
-              window.StreamPlayer.play();
-            }
-          }
-        });
-      };
-    }
-
-    detailsModal.classList.add('open');
-
-    // Focus play button immediately on modal open
-    setTimeout(function () {
-      if (playBtn && window.MagicRemote) {
-        window.MagicRemote.setFocus(playBtn);
-      }
-    }, 60);
-
-    // Fetch credits & actors from TMDB
-    var creditsUrl = 'https://api.themoviedb.org/3/' + item.mediaType + '/' + item.id + '/credits?api_key=' + TMDB_KEY;
-    fetchJSON(creditsUrl, function (err, data) {
-      if (!castGridEl) return;
-      if (err || !data || !data.cast || data.cast.length === 0) {
-        castGridEl.innerHTML = '<div class="no-cast">Cast information not available.</div>';
-        return;
-      }
-
-      var cast = data.cast.slice(0, 10); // top 10 actors
-      castGridEl.innerHTML = '';
-
-      for (var i = 0; i < cast.length; i++) {
-        var actor = cast[i];
-        var actorCard = document.createElement('div');
-        actorCard.className = 'actor-card';
-
-        var photoHtml = actor.profile_path
-          ? '<img class="actor-photo" src="' + TMDB_IMG_BASE + actor.profile_path + '" alt="' + escapeHTML(actor.name) + '">'
-          : '<div class="actor-photo-placeholder">👤</div>';
-
-        actorCard.innerHTML =
-          photoHtml +
-          '<div class="actor-info">' +
-            '<div class="actor-name">' + escapeHTML(actor.name) + '</div>' +
-            '<div class="actor-character">' + escapeHTML(actor.character || '') + '</div>' +
-          '</div>';
-
-        castGridEl.appendChild(actorCard);
+    card.addEventListener('click', function () {
+      if (window.DetailView) {
+        DetailView.open(item, list, index);
       }
     });
-  }
 
-  function closeDetails() {
-    if (!detailsModal) return;
-    isModalOpen = false;
-    detailsModal.setAttribute('aria-hidden', 'true');
-    detailsModal.classList.remove('open');
-
-    // Return focus to last selected card or search input
-    if (window.MagicRemote) {
-      if (lastSelectedTile && document.contains(lastSelectedTile)) {
-        window.MagicRemote.setFocus(lastSelectedTile);
-      } else {
-        var firstCard = resultsContainer ? resultsContainer.querySelector('.media-tile') : null;
-        if (firstCard) {
-          window.MagicRemote.setFocus(firstCard);
-        } else if (searchInput) {
-          var box = document.querySelector('.search-input-box');
-          if (box) window.MagicRemote.setFocus(box);
-        }
-      }
-    }
-  }
-
-  function renderLoading(msg) {
-    if (!resultsContainer) return;
-    resultsContainer.innerHTML =
-      '<div class="results-state-msg">' +
-        '<div class="spinner"></div>' +
-        '<span>' + msg + '</span>' +
-      '</div>';
-  }
-
-  function renderEmpty(msg) {
-    if (!resultsContainer) return;
-    resultsContainer.innerHTML =
-      '<div class="results-state-msg empty">' +
-        '<div class="state-icon">🔍</div>' +
-        '<span>' + msg + '</span>' +
-      '</div>';
-  }
-
-  function renderError(msg) {
-    if (!resultsContainer) return;
-    resultsContainer.innerHTML =
-      '<div class="results-state-msg error">' +
-        '<div class="state-icon">⚠️</div>' +
-        '<span>' + msg + '</span>' +
-      '</div>';
+    return card;
   }
 
   function fetchJSON(url, callback) {
@@ -509,11 +612,10 @@ var MediaSearch = (function () {
 
   return {
     init: init,
-    search: performSearch,
-    loadTrending: loadTrending,
-    closeDetails: closeDetails,
-    isModalOpen: function () {
-      return isModalOpen;
-    }
+    search: onQueryChanged,
+    applyQuery: applyQuery,
+    resetSearch: resetSearch,
+    switchTab: switchTab,
+    showSkeleton: showSkeleton
   };
 })();

@@ -16,7 +16,8 @@ if (-not $localIp) {
     $localIp = "127.0.0.1"
 }
 
-$baseDir = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
+$baseDir = "C:\Users\ry4ngupta\Documents\antigravity\serene-davinci"
+if ($PSScriptRoot) { $baseDir = $PSScriptRoot }
 
 # Clean up any lingering process on $port
 Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue | ForEach-Object {
@@ -70,8 +71,8 @@ $mimeTypes = @{
     ".vtt"  = "text/vtt"
 }
 
-try {
-    while ($true) {
+while ($true) {
+    try {
         $client = $listener.AcceptTcpClient()
         $stream = $client.GetStream()
         $reader = New-Object System.IO.StreamReader $stream, [System.Text.Encoding]::UTF8
@@ -156,7 +157,7 @@ try {
 
         $stream.Flush()
         $client.Close()
+    } catch {
+        # Keep serving on client disconnect
     }
-} finally {
-    $listener.Stop()
 }
