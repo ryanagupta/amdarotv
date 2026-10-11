@@ -417,8 +417,8 @@ body.mode-pointer .focusable:hover {
 }
 
 .search-prompt-icon {
-  width: 50px;
-  height: 50px;
+  width: 46px;
+  height: 46px;
   color: #6B6B6C;
   flex-shrink: 0;
   display: block;
@@ -442,10 +442,10 @@ body.mode-pointer .focusable:hover {
 
 .keyboard-source-switcher {
   position: fixed;
-  top: 212px;
+  top: 216px;
   left: 70px;
-  width: 285px;
-  height: 34px;
+  width: 324px;
+  height: 42px;
   background: #2C2C2E;
   border-radius: 9999px;
   border: none !important;
@@ -474,7 +474,7 @@ body.mode-pointer .focusable:hover {
   background: transparent;
   color: #8E8E93;
   font-family: 'San Francisco Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.2px;
   display: -webkit-flex;
