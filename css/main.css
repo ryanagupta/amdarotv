@@ -317,78 +317,146 @@ body.mode-pointer .focusable:hover {
 }
 
 /* --------------------------------------------------------------------------
-   APPLE TV+ TOP-LEFT PILL BUTTON (< Search) (Images 1-5)
+   APPLE TV+ TOP-LEFT PILL BUTTON (< Search) (1:1 with Reference Image)
    -------------------------------------------------------------------------- */
 
+.top-nav-bar,
 .search-top-bar {
   position: fixed;
-  top: 26px;
-  left: 44px;
+  top: 48px;
+  left: 48px;
   z-index: 120;
 }
 
-.search-top-pill {
+.top-nav-pill-btn {
   display: -webkit-inline-flex;
   display: inline-flex;
   -webkit-align-items: center;
   align-items: center;
-  height: 38px;
-  padding: 0 16px;
-  border-radius: 19px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.2px;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
   cursor: pointer;
+  outline: none;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-  transition: all 0.30s ease;
-  outline: none;
+  transition: -webkit-transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.search-top-chevron {
-  font-size: 20px;
+.top-nav-chevron {
+  width: 10px;
+  height: 18px;
+  color: #D1D1D6;
+  flex-shrink: 0;
+  display: block;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: color 0.20s ease,
+              -webkit-transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.top-nav-capsule {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  -webkit-align-items: center;
+  align-items: center;
+  height: 46px;
+  padding: 5px 22px 5px 5px;
+  border-radius: 9999px;
+  background: #232225;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.30);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: background 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.25s ease,
+              -webkit-transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.top-nav-icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #515154;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.25s ease;
+}
+
+.top-nav-search-icon {
+  width: 17px;
+  height: 17px;
+  stroke: #FFFFFF;
+  flex-shrink: 0;
+  transition: stroke 0.25s ease;
+}
+
+.top-nav-label {
+  font-family: 'San Francisco Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.2px;
+  margin-left: 9px;
   line-height: 1;
-  margin-right: 8px;
-  margin-top: -2px;
-  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  transition: color 0.25s ease;
 }
 
-.search-top-icon {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-  stroke: rgba(255, 255, 255, 0.85);
+/* Hover & Remote 5-Way Focus States */
+.top-nav-pill-btn:focus .top-nav-capsule,
+.top-nav-pill-btn.focused .top-nav-capsule,
+body.mode-5way .top-nav-pill-btn.focused .top-nav-capsule,
+body.mode-pointer .top-nav-pill-btn:hover .top-nav-capsule {
+  background: #FFFFFF !important;
+  border-color: #FFFFFF !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.50) !important;
+  -webkit-transform: scale(1.05) translateZ(0);
+  transform: scale(1.05) translateZ(0);
 }
 
-.search-top-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-body.mode-5way .search-top-pill.focused,
-body.mode-pointer .search-top-pill:hover {
-  background: #ffffff !important;
-  color: #000000 !important;
-  border-color: #ffffff !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
-  -webkit-transform: scale(1.06) translateZ(0);
-  transform: scale(1.06) translateZ(0);
-}
-
-body.mode-5way .search-top-pill.focused .search-top-chevron,
-body.mode-pointer .search-top-pill:hover .search-top-chevron,
-body.mode-5way .search-top-pill.focused .search-top-label,
-body.mode-pointer .search-top-pill:hover .search-top-label {
+.top-nav-pill-btn:focus .top-nav-label,
+.top-nav-pill-btn.focused .top-nav-label,
+body.mode-5way .top-nav-pill-btn.focused .top-nav-label,
+body.mode-pointer .top-nav-pill-btn:hover .top-nav-label {
   color: #000000 !important;
 }
 
-body.mode-5way .search-top-pill.focused .search-top-icon,
-body.mode-pointer .search-top-pill:hover .search-top-icon {
+.top-nav-pill-btn:focus .top-nav-icon-circle,
+.top-nav-pill-btn.focused .top-nav-icon-circle,
+body.mode-5way .top-nav-pill-btn.focused .top-nav-icon-circle,
+body.mode-pointer .top-nav-pill-btn:hover .top-nav-icon-circle {
+  background: #E5E5EA !important;
+}
+
+.top-nav-pill-btn:focus .top-nav-search-icon,
+.top-nav-pill-btn.focused .top-nav-search-icon,
+body.mode-5way .top-nav-pill-btn.focused .top-nav-search-icon,
+body.mode-pointer .top-nav-pill-btn:hover .top-nav-search-icon {
   stroke: #000000 !important;
+}
+
+.top-nav-pill-btn:focus .top-nav-chevron,
+.top-nav-pill-btn.focused .top-nav-chevron,
+body.mode-5way .top-nav-pill-btn.focused .top-nav-chevron,
+body.mode-pointer .top-nav-pill-btn:hover .top-nav-chevron {
+  color: #FFFFFF !important;
+  -webkit-transform: translateX(-3px);
+  transform: translateX(-3px);
 }
 
 /* --------------------------------------------------------------------------
